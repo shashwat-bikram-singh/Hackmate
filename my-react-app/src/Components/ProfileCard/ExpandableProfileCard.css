@@ -1,0 +1,308 @@
+/* ============================================================
+   ExpandableProfileCard Styles (Tailwind Class Polyfill & Styling)
+   ============================================================ */
+
+:root {
+  --card-primary: #2563eb;
+  --card-primary-hover: #1d4ed8;
+  --card-primary-foreground: #ffffff;
+  --card-foreground: #0f172a;
+  --card-muted-foreground: #64748b;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-accent: #eff6ff;
+}
+
+/* Card Container */
+.expandable-card-container {
+  cursor: pointer;
+  position: relative;
+  height: 16rem; /* h-64 */
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.875rem; /* rounded-xl */
+  border: 1px solid var(--card-border);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  background-color: #0f172a;
+}
+
+.expandable-card-container:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+/* Cover Image */
+.expandable-card-image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+/* Gradient Overlay */
+.expandable-card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 14, 26, 0.85) 0%, rgba(10, 14, 26, 0.3) 50%, transparent 100%);
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.expandable-card-container:hover .expandable-card-gradient {
+  opacity: 0.92;
+}
+
+/* Text Overlay (Shifted to right side of the picture where it is empty) */
+.expandable-card-overlay {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  left: auto;
+  max-width: 75%;
+  width: auto;
+  padding: 0.65rem 0.95rem;
+  background: rgba(10, 14, 26, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  z-index: 2;
+  transform: translateY(0.25rem);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.expandable-card-container:hover .expandable-card-overlay {
+  transform: translateY(0);
+  background: rgba(10, 14, 26, 0.88);
+  border-color: rgba(96, 165, 250, 0.4);
+}
+
+.expandable-card-subtitle {
+  color: #60a5fa; /* royal blue accent */
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 0.2rem 0;
+  display: block;
+  text-align: right;
+  line-height: 1.25;
+}
+
+.expandable-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  text-align: right;
+}
+
+/* Modal Overlay & Backdrop */
+.expandable-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  box-sizing: border-box;
+}
+
+.expandable-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(9, 13, 22, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Modal Dialog */
+.expandable-modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 54rem; /* max-w-4xl */
+  height: 80vh;
+  background-color: #ffffff;
+  border-radius: 1.25rem; /* rounded-2xl */
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+
+/* Close Button */
+.expandable-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 30;
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  color: #0f172a;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.expandable-modal-close:hover {
+  background-color: #f1f5f9;
+  color: #000000;
+  transform: scale(1.05);
+}
+
+/* Modal Image Side */
+.expandable-modal-media {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+  background-color: #0f172a;
+}
+
+.expandable-modal-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Modal Content Side */
+.expandable-modal-content {
+  padding: 2rem 2.25rem;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.expandable-modal-subtitle {
+  color: var(--card-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
+  display: block;
+}
+
+.expandable-modal-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--card-border);
+  line-height: 1.2;
+}
+
+.expandable-modal-body {
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  flex-grow: 1;
+}
+
+/* Content Blocks Inside Modal */
+.modal-content-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.modal-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+  margin: 0 0 0.35rem 0;
+}
+
+.modal-section-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.modal-connect-btn {
+  margin-top: 1rem;
+  padding: 0.65rem 1.4rem;
+  background-color: var(--card-primary);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  box-shadow: 0 1px 3px 0 rgba(91, 75, 255, 0.3);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-connect-btn:hover {
+  background-color: var(--card-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(91, 75, 255, 0.35);
+}
+
+/* Custom Scrollbar for Modal Content */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .expandable-modal-dialog {
+    flex-direction: column;
+    height: 90vh;
+    max-height: 90vh;
+  }
+  .expandable-modal-media {
+    width: 100%;
+    height: 14rem;
+  }
+  .expandable-modal-content {
+    width: 100%;
+    height: calc(100% - 14rem);
+    padding: 1.25rem 1.5rem;
+  }
+}

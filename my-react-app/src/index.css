@@ -1,0 +1,119 @@
+/* ============================================================
+   HackaMate — global theme ("Build Mode")
+   Light UI · Space Grotesk display · Inter body · Space Mono data
+   ============================================================ */
+
+:root {
+  /* text */
+  --ink: #14161d;
+  --ink-2: #2b2f3a;
+  --muted: #5c6472;
+  --faint: #8a91a1;
+
+  /* surfaces */
+  --bg: #ffffff;
+  --bg-alt: #f5f6fa;
+  --line: #e6e8ee;
+  --panel: #101219;        /* dark near-black for footer / cta / auth brand */
+
+  /* brand accent — modern royal blue theme */
+  --violet: #2563eb;
+  --violet-dark: #1d4ed8;
+  --violet-soft: #eff6ff;
+  --violet-lift: #60a5fa;  /* lighter blue for dark backgrounds */
+  --live: #16c265;         /* status green (static) */
+
+  /* type */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --container: 1120px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, p { margin: 0; }
+h1, h2, h3, h4 { font-family: var(--font-display); }
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Wordmark — clean bold, two-tone. The "Mate" carries the accent. */
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.logo-accent { color: var(--violet); }
+
+/* Eyebrow — mono "code comment" label. The page's signature device. */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.eyebrow::before { content: "// "; opacity: 0.65; }
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  text-align: center;
+}
+.btn-primary { background: var(--violet); color: #fff; }
+.btn-primary:hover { background: var(--violet-dark); }
+.btn-outline { background: #fff; color: var(--ink); border-color: var(--line); }
+.btn-outline:hover { border-color: var(--violet); color: var(--violet); }
+
+/* Section headings */
+.section-head {
+  max-width: 640px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+.section-title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-top: 14px;
+}
+.section-text { margin-top: 14px; color: var(--muted); }
+
+/* Shared mono "data" helper (prizes, counts, stacks) */
+.mono { font-family: var(--font-mono); }

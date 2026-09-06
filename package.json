@@ -1,0 +1,10 @@
+{
+  "name": "hackmate",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm --prefix my-react-app run dev",
+    "build": "npm --prefix my-react-app run build",
+    "preview": "npm --prefix my-react-app run preview"
+  }
+}

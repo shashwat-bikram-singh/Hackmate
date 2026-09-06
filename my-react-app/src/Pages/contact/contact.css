@@ -1,0 +1,275 @@
+/* ============================================================
+   HackaMate — Contact Page Styles
+   Matches contact.jsx class structure with Royal Blue brand accents
+   ============================================================ */
+
+.contact-container,
+.contact-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 160px);
+  padding: 64px 24px 84px;
+  background-color: var(--bg-alt, #f5f6fa);
+  font-family: var(--font-body, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  color: var(--ink, #0f172a);
+  box-sizing: border-box;
+}
+
+.contact-card {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  gap: 48px;
+  align-items: stretch;
+  background: #ffffff;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 20px 35px -8px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+/* ================= Left Dark Sidebar ================= */
+.contact-sidebar,
+.contact-info-panel {
+  flex: 0 0 380px;
+  background: linear-gradient(150deg, #0d111a 0%, #151a26 100%);
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  padding: 44px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 520px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+}
+
+/* Decorative Background Curves */
+.sidebar-curves,
+.bg-waves {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 340px;
+  height: 340px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.35;
+}
+
+.sidebar-curves svg,
+.bg-waves svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar-content,
+.panel-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Sidebar Header */
+.sidebar-header h2,
+.panel-header h2 {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.sidebar-header p,
+.panel-header p {
+  color: #94a3b8;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0 0 36px 0;
+}
+
+/* Contact Details List */
+.contact-details,
+.contact-channels {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.contact-details li,
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #f1f5f9;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.contact-icon,
+.contact-item .icon {
+  width: 20px;
+  height: 20px;
+  color: #60a5fa; /* royal blue light */
+  flex-shrink: 0;
+}
+
+/* Social Media Icons */
+.social-icons,
+.panel-socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.social-icons a,
+.social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.social-icons a:hover,
+.social-link:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.social-icons a svg,
+.social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ================= Right Form Column ================= */
+.contact-form,
+.contact-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 20px 16px 8px;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group,
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.form-group label,
+.input-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: var(--ink, #0f172a);
+  background-color: #ffffff;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: var(--faint, #94a3b8);
+  font-size: 0.88rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.form-group textarea,
+.input-group textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.form-action,
+.button-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ================= Responsive Adjustments ================= */
+@media (max-width: 900px) {
+  .contact-container,
+  .contact-page-wrapper {
+    padding: 36px 16px 60px;
+  }
+
+  .contact-card {
+    flex-direction: column;
+    gap: 36px;
+    padding: 20px;
+  }
+
+  .contact-sidebar,
+  .contact-info-panel {
+    flex: auto;
+    min-height: 440px;
+    padding: 32px 24px;
+  }
+
+  .contact-form,
+  .contact-form-panel {
+    padding: 0;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

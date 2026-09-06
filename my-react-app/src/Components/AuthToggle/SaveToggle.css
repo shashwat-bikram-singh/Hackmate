@@ -1,0 +1,89 @@
+/* ============================================================
+   SaveToggle / Auth Approval Pop-in Button Styles
+   ============================================================ */
+
+.save-toggle-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 12px 0 6px;
+}
+
+.save-toggle-btn {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 9999px;
+  user-select: none;
+  border: none;
+  font-family: var(--font-body, system-ui, sans-serif);
+  outline: none;
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.save-toggle-btn:hover:not(:disabled) {
+  box-shadow: 0 6px 20px -2px rgba(37, 99, 235, 0.45);
+}
+
+.save-toggle-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.save-toggle-btn:disabled {
+  cursor: default;
+}
+
+.save-toggle-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.save-toggle-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save-toggle-spinner {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+.save-toggle-check-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.save-toggle-check-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.save-toggle-saved-text {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: #ffffff;
+}

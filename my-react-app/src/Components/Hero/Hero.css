@@ -1,0 +1,135 @@
+.hero { padding: 84px 0 76px; }
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 52px;
+  align-items: center;
+}
+.hero-title {
+  margin-top: 20px;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+.hero-text {
+  margin-top: 20px;
+  max-width: 468px;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+.hero-buttons { display: flex; gap: 14px; margin-top: 30px; }
+.hero-social { display: flex; align-items: center; gap: 12px; margin-top: 34px; }
+.avatars { display: flex; }
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  margin-left: -9px;
+}
+.avatar:first-child { margin-left: 0; }
+.hero-social-text {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* Live-matches dashboard card */
+.dashboard {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 24px 48px -28px rgba(20, 22, 29, 0.28);
+}
+.dashboard-head h3 { font-size: 1.15rem; font-weight: 600; }
+.dashboard-head p { margin-top: 3px; color: var(--muted); font-size: 0.9rem; }
+.dashboard-search {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+.dashboard-search:focus { outline: none; border-color: var(--violet); }
+.dashboard-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  width: fit-content;
+  cursor: pointer;
+  padding: 4px 8px 4px 2px;
+  border-radius: 6px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.dashboard-label::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 3px rgba(22, 194, 101, 0.16);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+/* Blinking effect when in contact with "Active matches for you" */
+.dashboard-label:hover {
+  color: var(--ink);
+  transform: translateX(2px);
+}
+
+.dashboard-label:hover::before {
+  animation: live-blink 0.75s ease-in-out infinite;
+}
+
+@keyframes live-blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1.2);
+    background: #16c265;
+    box-shadow: 0 0 0 0 rgba(22, 194, 101, 0.7), 0 0 10px rgba(22, 194, 101, 0.85);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(0.75);
+    background: #0f9a4f;
+    box-shadow: 0 0 0 7px rgba(22, 194, 101, 0), 0 0 2px rgba(22, 194, 101, 0.2);
+  }
+}
+
+.match-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+.match {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+}
+.match:hover { border-color: var(--violet); }
+.match-title { font-weight: 600; font-size: 0.94rem; }
+.match-meta {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-title { font-size: 2.4rem; }
+}

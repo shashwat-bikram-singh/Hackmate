@@ -1,0 +1,63 @@
+.how { padding: 84px 0; background: var(--bg-alt); }
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.how-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 8px 16px -4px rgba(0, 0, 0, 0.03);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.how-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 16px 36px -8px rgba(37, 99, 235, 0.14),
+              0 8px 20px -4px rgba(0, 0, 0, 0.06),
+              0 0 0 1px rgba(37, 99, 235, 0.15);
+}
+
+.how-num {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--violet, #2563eb);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s ease;
+}
+
+.how-card:hover .how-num {
+  transform: translateY(-2px) scale(1.08);
+  color: var(--violet-dark, #1d4ed8);
+}
+
+.how-title {
+  margin-top: 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  transition: color 0.25s ease;
+}
+
+.how-card:hover .how-title {
+  color: var(--violet, #2563eb);
+}
+
+.how-text {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) { .how-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .how-grid { grid-template-columns: 1fr; } }
