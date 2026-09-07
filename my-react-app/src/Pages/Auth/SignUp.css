@@ -1,0 +1,301 @@
+﻿/* ═══════════════════════════════════════════════
+   HackaMate Animated Login — SignIn.css
+   ═══════════════════════════════════════════════ */
+
+.anim-root {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef0f7;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+/* ── Violet loader overlay ── */
+.anim-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+
+.anim-loader-dots {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* goo filter applied via inline style / SVG defs */
+  filter: url(#goo);
+}
+
+.anim-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* ── Skip button ── */
+.anim-skip {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 70;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  padding: 6px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background 0.15s;
+}
+.anim-skip.dark {
+  background: rgba(0,0,0,0.07);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.anim-skip:hover { background: rgba(255,255,255,0.28); }
+.anim-skip.dark:hover { background: rgba(0,0,0,0.12); }
+
+/* ── Split card ── */
+.anim-card {
+  display: flex;
+  width: 860px;
+  min-height: 540px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px -16px rgba(0,0,0,0.18), 0 8px 24px -4px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+/* Left illustration panel */
+.anim-left {
+  width: 45%;
+  background: #dde1f0;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 540px;
+}
+
+/* Subtle dot-grid decoration */
+.anim-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(37,99,235,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* Right form panel */
+.anim-right {
+  width: 55%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 44px;
+  position: relative;
+}
+
+.anim-form-inner {
+  width: 100%;
+  max-width: 340px;
+}
+
+/* ── Sparkle logomark ── */
+.anim-sparkle {
+  display: block;
+  margin-bottom: 22px;
+  color: var(--violet);
+}
+
+/* ── Headings ── */
+.anim-heading {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.anim-subtext {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 0 0 28px;
+}
+
+/* ── Form fields ── */
+.anim-field {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.anim-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--faint);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.anim-pw-wrap {
+  position: relative;
+}
+
+.anim-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid var(--line);
+  padding: 8px 0;
+  font-size: 1rem;
+  background: transparent;
+  outline: none;
+  color: var(--ink);
+  font-family: var(--font-body);
+  transition: border-color 0.2s ease;
+}
+.anim-input:focus { border-bottom-color: var(--violet); }
+
+.anim-eye-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--faint);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.anim-eye-btn:hover { color: var(--ink); }
+
+/* ── Checkbox row ── */
+.anim-check-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.anim-check-row label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.anim-check-row input[type="checkbox"] {
+  accent-color: var(--violet);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+.anim-forgot {
+  color: var(--violet);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+.anim-forgot:hover { text-decoration: underline; }
+
+/* ── Buttons ── */
+.anim-btn-primary {
+  width: 100%;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: opacity 0.15s, transform 0.1s;
+  font-family: var(--font-body);
+  letter-spacing: 0.01em;
+}
+.anim-btn-primary:hover { opacity: 0.88; }
+.anim-btn-primary:active { transform: scale(0.98); }
+
+.anim-btn-secondary {
+  width: 100%;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--bg-alt);
+  border: 1.5px solid var(--line);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  transition: background 0.15s;
+  font-family: var(--font-body);
+}
+.anim-btn-secondary:hover { background: #e9ecf5; }
+
+/* ── Footer link ── */
+.anim-footer {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.anim-footer a {
+  color: var(--violet);
+  font-weight: 600;
+  text-decoration: none;
+}
+.anim-footer a:hover { text-decoration: underline; }
+
+/* ── Virtual cursor ── */
+.anim-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 40;
+  top: 0;
+  left: 0;
+}
+
+/* ── Demo typed text overlay ── */
+.anim-demo-input {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  pointer-events: none;
+  padding: 8px 0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .anim-card { width: 96vw; flex-direction: column; }
+  .anim-left  { width: 100%; height: 220px; min-height: 220px; }
+  .anim-right { width: 100%; padding: 36px 28px; }
+}
