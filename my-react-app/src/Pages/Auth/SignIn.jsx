@@ -1,6 +1,7 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import MascotScene from "./MascotScene.jsx";
+import SaveToggle from "../../Components/AuthToggle/SaveToggle.jsx";
 import "./SignIn.css";
 
 /* ── 4-point geometric sparkle icon matching reference ── */
@@ -376,15 +377,20 @@ export default function SignIn() {
                   </div>
                 </FadeUp>
 
-                {/* Primary Log In Button */}
+                {/* SaveToggle Pop Up Button */}
                 <FadeUp delay={0.36} show={showCard}>
-                  <button
-                    className="anim-btn-primary"
-                    type="submit"
-                    disabled={submitting}
-                  >
-                    {submitting ? "Logging in…" : "Log In"}
-                  </button>
+                  <div style={{ display: "flex", justifyContent: "center", width: "100%", marginBottom: 12 }}>
+                    <SaveToggle
+                      size="md"
+                      idleText="Log in"
+                      savedText="Logged in!"
+                      loadingDuration={900}
+                      successDuration={700}
+                      onComplete={() => {
+                        window.location.hash = "#/dashboard";
+                      }}
+                    />
+                  </div>
                 </FadeUp>
 
                 {/* Secondary Google Button */}
