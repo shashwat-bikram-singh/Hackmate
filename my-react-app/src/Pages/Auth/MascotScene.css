@@ -1,79 +1,269 @@
-﻿/* ═══════════════════════════════════════════
-   Mascot Scene — Cursor-Reactive Googly Eyes
-   ═══════════════════════════════════════════ */
+﻿/* ══════════════════════════════════════════════════════════════════
+   HackaMate Mascot Scene — Reference-matched Composition
+   Overlapping shapes: Orange dome, Blue tall rect, Charcoal rect, Yellow pill
+   Live googly-eye cursor tracking + Validation-reactive expressions
+   ══════════════════════════════════════════════════════════════════ */
 
 .mascot-area {
   width: 100%;
   height: 100%;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
+  background: transparent;
 }
 
-.mascot-group {
-  display: flex;
-  align-items: flex-end;
-  gap: 0;
+/* Base anchor group at bottom center */
+.mascot-stage {
   position: relative;
-  padding-bottom: 0;
+  width: 300px;
+  height: 250px;
 }
 
-/* ── Character wrapper ── */
+/* Character base styling */
 .mascot-char {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ── Body shape ── */
-.mascot-body {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-/* ── Face container (eyes + mouth) ── */
-.mascot-face {
   position: absolute;
-  top: 25%;
+  bottom: 0;
+  will-change: transform;
+}
+
+/* ────────────────────────────────────────────────
+   1. VIOLET RECTANGLE (Tallest, back left-center)
+   ──────────────────────────────────────────────── */
+.char-violet {
+  left: 56px;
+  width: 88px;
+  height: 232px;
+  background: var(--violet, #2563eb);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.char-violet .violet-face {
+  position: absolute;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  pointer-events: none;
 }
 
-/* ── Eyes row ── */
-.mascot-eyes {
+.char-violet .violet-eyes-row {
   display: flex;
-  gap: 7px;
+  align-items: center;
+  gap: 22px;
+  position: relative;
+}
+
+/* Center vertical nose/mouth bar */
+.char-violet .violet-bar {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 24px;
+  background: #14161d;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.char-violet .violet-frown {
+  width: 16px;
+  height: 8px;
+  border: 2.5px solid #14161d;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  margin-top: 20px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.25s ease;
+}
+
+.char-violet.frowning .violet-frown {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ────────────────────────────────────────────────
+   2. CHARCOAL RECTANGLE (Medium, back right-center)
+   ──────────────────────────────────────────────── */
+.char-charcoal {
+  left: 138px;
+  width: 68px;
+  height: 162px;
+  background: #191a22;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.char-charcoal .charcoal-face {
+  position: absolute;
+  top: 18px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-/* ── Single eye — white sclera with pupil ── */
-.mascot-eye {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ffffff;
-  position: relative;
-  overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+.char-charcoal .charcoal-eyes-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-/* Pupil — positioned via inline transform from JS */
-.mascot-pupil {
+.char-charcoal .charcoal-frown {
+  width: 14px;
+  height: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  margin-top: 8px;
+  opacity: 0;
+  transition: all 0.25s ease;
+}
+
+.char-charcoal.frowning .charcoal-frown {
+  opacity: 1;
+}
+
+/* ────────────────────────────────────────────────
+   3. ORANGE DOME (Semicircle, front-left)
+   ──────────────────────────────────────────────── */
+.char-orange {
+  left: 0;
+  width: 172px;
+  height: 102px;
+  background: #ff7033;
+  border-radius: 95px 95px 0 0;
+  z-index: 3;
+}
+
+.char-orange .orange-face {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.char-orange .orange-eyes-row {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Orange Mouth: Crescent smile with tongue */
+.char-orange .orange-mouth {
+  width: 20px;
+  height: 11px;
+  background: #14161d;
+  border-radius: 0 0 12px 12px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 4px;
+  transition: all 0.25s ease;
+}
+
+.char-orange .orange-mouth::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background: #ff4757;
+  border-radius: 8px 8px 0 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Frown state for orange */
+.char-orange.frowning .orange-mouth {
+  border-radius: 12px 12px 0 0;
+  height: 8px;
+  width: 18px;
+  background: transparent;
+  border: 2.5px solid #14161d;
+  border-bottom: none;
+}
+
+.char-orange.frowning .orange-mouth::after {
+  opacity: 0;
+}
+
+/* ────────────────────────────────────────────────
+   4. YELLOW PILL (Front-right, with beak)
+   ──────────────────────────────────────────────── */
+.char-yellow {
+  left: 174px;
+  width: 86px;
+  height: 124px;
+  background: #f4ba11;
+  border-radius: 43px 43px 0 0;
+  z-index: 3;
+}
+
+.char-yellow .yellow-face {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.char-yellow .yellow-eye-wrap {
+  margin-left: 28px;
+}
+
+/* Horizontal beak sticking out to the right */
+.char-yellow .yellow-beak {
+  position: absolute;
+  right: -12px;
+  top: 14px;
+  width: 34px;
+  height: 6px;
+  background: #14161d;
+  border-radius: 3px;
+  transform-origin: left center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.char-yellow.frowning .yellow-beak {
+  transform: rotate(20deg);
+}
+
+/* ────────────────────────────────────────────────
+   EYE COMPONENTS & PUPIL TRACKING
+   ──────────────────────────────────────────────── */
+
+/* White eye (used on Violet & Charcoal) */
+.eye-white {
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.char-charcoal .eye-white {
+  width: 15px;
+  height: 15px;
+}
+
+.eye-pupil {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
   background: #14161d;
+  border-radius: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -82,56 +272,85 @@
   pointer-events: none;
 }
 
-/* ── Shy / closed eye state ── */
-.mascot-eye.closed {
-  background: transparent;
-  box-shadow: none;
-  overflow: visible;
+.char-charcoal .eye-pupil {
+  width: 7px;
+  height: 7px;
 }
-.mascot-eye.closed .mascot-pupil {
-  display: none;
+
+/* Solid dot eye (used on Orange & Yellow) */
+.eye-dot {
+  background: #14161d;
+  border-radius: 50%;
+  position: relative;
+  will-change: transform;
 }
-.mascot-eye.closed::after {
+
+.char-orange .eye-dot {
+  width: 11px;
+  height: 11px;
+}
+
+.char-yellow .eye-dot {
+  width: 8px;
+  height: 8px;
+}
+
+/* Closed / Shy Eyes */
+.eye-white.closed,
+.eye-dot.closed {
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.eye-white.closed .eye-pupil {
+  display: none !important;
+}
+
+.eye-white.closed::after,
+.eye-dot.closed::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 10px;
+  width: 100%;
   height: 3px;
   background: #14161d;
   border-radius: 0 0 6px 6px;
 }
 
-/* ── Mouth ── */
-.mascot-mouth {
-  width: 14px;
-  height: 2px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 2px;
-  transition: all 0.3s ease;
+.char-charcoal .eye-white.closed::after {
+  background: #ffffff;
 }
 
-/* Smile variant */
-.mascot-mouth.smile {
-  width: 12px;
-  height: 6px;
-  background: transparent;
-  border: 2px solid rgba(0,0,0,0.3);
-  border-top: none;
-  border-radius: 0 0 10px 10px;
+/* ────────────────────────────────────────────────
+   IDLE BOBBING ANIMATIONS
+   ──────────────────────────────────────────────── */
+@keyframes mascot-bob-0 {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4.5px); }
 }
 
-/* ── Idle bob keyframes ── */
-@keyframes mascot-bob {
+@keyframes mascot-bob-1 {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-5px); }
 }
 
-.mascot-char.bob-0 { animation: mascot-bob 2.4s ease-in-out 0s    infinite; }
-.mascot-char.bob-1 { animation: mascot-bob 2.4s ease-in-out 0.4s  infinite; }
-.mascot-char.bob-2 { animation: mascot-bob 2.4s ease-in-out 0.8s  infinite; }
-.mascot-char.bob-3 { animation: mascot-bob 2.4s ease-in-out 1.2s  infinite; }
+@keyframes mascot-bob-2 {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@keyframes mascot-bob-3 {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5.5px); }
+}
+
+.mascot-char.bob-0 { animation: mascot-bob-0 2.5s ease-in-out 0s infinite; }
+.mascot-char.bob-1 { animation: mascot-bob-1 2.5s ease-in-out 0.4s infinite; }
+.mascot-char.bob-2 { animation: mascot-bob-2 2.5s ease-in-out 0.8s infinite; }
+.mascot-char.bob-3 { animation: mascot-bob-3 2.5s ease-in-out 1.2s infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .mascot-char { animation: none !important; }

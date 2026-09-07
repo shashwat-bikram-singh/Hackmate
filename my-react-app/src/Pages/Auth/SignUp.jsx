@@ -3,37 +3,76 @@ import { motion, AnimatePresence } from "motion/react";
 import MascotScene from "./MascotScene.jsx";
 import "./SignUp.css";
 
-function Sparkle() {
+/* ── 4-point geometric sparkle icon matching reference ── */
+function Sparkle({ size = 26 }) {
   return (
-    <svg className="anim-sparkle" width="32" height="32" viewBox="0 0 32 32" fill="none">
-      <path d="M16 2 L16 30" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-      <path d="M2 16 L30 16" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-      <path d="M7 7 L25 25" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <path d="M25 7 L7 25" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="#14161d"
+      className="anim-sparkle"
+    >
+      <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" />
     </svg>
   );
 }
 
+/* ── Google Multi-color G Icon ── */
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24">
+      <path
+        fill="#4285F4"
+        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+      />
+    </svg>
+  );
+}
+
+/* ── Eye Toggle Icon ── */
 function EyeIcon({ open }) {
-  if (open) return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-      <circle cx="12" cy="12" r="3"/>
-    </svg>
-  );
+  if (open) {
+    return (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      >
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    );
+  }
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
-      <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
-      <line x1="1" y1="1" x2="23" y2="23"/>
-    </svg>
-  );
-}
-
-function GitHubIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+      <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+      <line x1="1" y1="1" x2="23" y2="23" />
     </svg>
   );
 }
@@ -44,7 +83,8 @@ function FadeUp({ children, delay, show }) {
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay }}
+      style={{ width: "100%" }}
     >
       {children}
     </motion.div>
@@ -54,20 +94,51 @@ function FadeUp({ children, delay, show }) {
 export default function SignUp() {
   const [phase, setPhase] = useState("loader");
   const timers = useRef([]);
-  const later = (fn, ms) => { const id = setTimeout(fn, ms); timers.current.push(id); };
-  const killTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
 
-  const [name, setName]           = useState("");
-  const [email, setEmail]         = useState("");
-  const [password, setPassword]   = useState("");
+  const later = (fn, ms) => {
+    const id = setTimeout(fn, ms);
+    timers.current.push(id);
+  };
+
+  const killTimers = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
+
+  // Form Fields
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
-  const [showPw, setShowPw]       = useState(false);
+  const [showPw, setShowPw] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const [eyeState, setEyeState]   = useState("idle");
-  const [dropped, setDropped]     = useState(false);
+  // Validation States
+  const [nameTouched, setNameTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmTouched, setConfirmTouched] = useState(false);
+
+  // Mascot Animation States
+  const [eyeState, setEyeState] = useState("idle");
+  const [dropped, setDropped] = useState(false);
   const [assembled, setAssembled] = useState(false);
   const [dotsClose, setDotsClose] = useState(false);
+
+  // Validation logic
+  const isEmailValid = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  const isPasswordValid = (val) => val.length >= 6;
+
+  const nameError = nameTouched && !name ? "Name is required" : "";
+  const emailError =
+    emailTouched && (!email ? "Email is required" : !isEmailValid(email) ? "Please enter a valid email" : "");
+  const passwordError =
+    passwordTouched && (!password ? "Password is required" : !isPasswordValid(password) ? "Password must be at least 6 characters" : "");
+  const confirmError =
+    confirmTouched && (!confirmPw ? "Confirm your password" : confirmPw !== password ? "Passwords do not match" : "");
+
+  const hasError = Boolean(nameError || emailError || passwordError || confirmError);
+  const formStatus = hasError ? "error" : name && email && password && confirmPw ? "valid" : "neutral";
 
   function skip() {
     killTimers();
@@ -78,138 +149,316 @@ export default function SignUp() {
   }
 
   useEffect(() => {
-    later(() => setDotsClose(true), 1500);
-    later(() => setPhase("reveal"), 2200);
-    later(() => { setDropped(true); }, 3400);
-    later(() => { setAssembled(true); setEyeState("idle"); }, 5200);
-    later(() => setPhase("interactive"), 6500);
+    later(() => setDotsClose(true), 1300);
+    later(() => setPhase("reveal"), 1900);
+    later(() => {
+      setDropped(true);
+    }, 2500);
+    later(() => {
+      setAssembled(true);
+      setEyeState("idle");
+      setPhase("interactive");
+    }, 3800);
+
     return killTimers;
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleSubmit(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    setNameTouched(true);
+    setEmailTouched(true);
+    setPasswordTouched(true);
+    setConfirmTouched(true);
+
+    if (
+      !name ||
+      !email ||
+      !isEmailValid(email) ||
+      !password ||
+      !isPasswordValid(password) ||
+      confirmPw !== password
+    ) {
+      return;
+    }
+
     setSubmitting(true);
-    setTimeout(() => { window.location.hash = "#/dashboard"; }, 800);
+    setTimeout(() => {
+      window.location.hash = "#/dashboard";
+    }, 750);
   }
 
   const showLoader = phase === "loader";
-  const showCard   = phase !== "loader";
-  const isLive     = phase === "interactive";
+  const showCard = phase !== "loader";
+  const isLive = phase === "interactive";
 
   return (
     <div className="anim-root">
+      {/* SVG filter for gooey dots merge */}
       <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
         <defs>
-          <filter id="goo2">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/>
-            <feColorMatrix in="blur" mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="goo2"/>
-            <feComposite in="SourceGraphic" in2="goo2" operator="atop"/>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
           </filter>
         </defs>
       </svg>
 
+      {/* Phase 0 & 1: Full-bleed Violet Loader */}
       <AnimatePresence>
         {showLoader && (
-          <motion.div key="loader" className="anim-loader"
-            exit={{ opacity: 0 }} transition={{ duration: 0.45 }}>
-            <div className="anim-loader-dots" style={{ filter: "url(#goo2)" }}>
-              <motion.div className="anim-dot"
-                animate={{ scale: [0.8, 1.15, 0.8], x: dotsClose ? 10 : 0 }}
-                transition={{ scale: { duration: 0.85, repeat: Infinity, ease: "easeInOut" },
-                              x: { duration: 0.45, ease: "easeInOut" } }} />
-              <motion.div className="anim-dot"
-                animate={{ scale: [1.15, 0.8, 1.15], x: dotsClose ? -10 : 0 }}
-                transition={{ scale: { duration: 0.85, repeat: Infinity, ease: "easeInOut", delay: 0.12 },
-                              x: { duration: 0.45, ease: "easeInOut" } }} />
+          <motion.div
+            key="loader"
+            className="anim-loader"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            <div className="anim-loader-dots">
+              <motion.div
+                className="anim-dot"
+                animate={{
+                  scale: [0.85, 1.2, 0.85],
+                  x: dotsClose ? 10 : 0,
+                }}
+                transition={{
+                  scale: { duration: 0.85, repeat: Infinity, ease: "easeInOut" },
+                  x: { duration: 0.45, ease: "easeInOut" },
+                }}
+              />
+              <motion.div
+                className="anim-dot"
+                animate={{
+                  scale: [1.2, 0.85, 1.2],
+                  x: dotsClose ? -10 : 0,
+                }}
+                transition={{
+                  scale: { duration: 0.85, repeat: Infinity, ease: "easeInOut", delay: 0.12 },
+                  x: { duration: 0.45, ease: "easeInOut" },
+                }}
+              />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {!isLive && (
-        <button className={"anim-skip" + (showLoader ? "" : " dark")} onClick={skip}>Skip &rarr;</button>
+        <button
+          className={`anim-skip ${showLoader ? "" : "dark"}`}
+          onClick={skip}
+          title="Skip intro"
+        >
+          Skip &rarr;
+        </button>
       )}
 
       {showCard && (
-        <motion.div className="anim-card"
-          initial={{ scale: 0.9, opacity: 0 }}
+        <motion.div
+          className="anim-card"
+          initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 22 }}>
-
+          transition={{ type: "spring", stiffness: 200, damping: 22 }}
+        >
+          {/* LEFT PANEL: Light-gray Illustration Zone with Mascots */}
           <div className="anim-left">
-            <MascotScene eyeState={eyeState} dropped={dropped} assembled={assembled} />
+            <MascotScene
+              eyeState={eyeState}
+              formStatus={formStatus}
+              dropped={dropped}
+              assembled={assembled}
+            />
           </div>
 
+          {/* RIGHT PANEL: White Form Panel */}
           <div className="anim-right">
             <div className="anim-form-inner">
-              <FadeUp delay={0} show={showCard}><Sparkle /></FadeUp>
-              <FadeUp delay={0.08} show={showCard}><h1 className="anim-heading">Join HackaMate!</h1></FadeUp>
-              <FadeUp delay={0.14} show={showCard}><p className="anim-subtext">Create your account and start building</p></FadeUp>
-
-              <FadeUp delay={0.19} show={showCard}>
-                <div className="anim-field">
-                  <label className="anim-label">Full Name</label>
-                  <input className="anim-input" type="text" value={name}
-                    onChange={e => setName(e.target.value)}
-                    onFocus={() => setEyeState("watching")}
-                    onBlur={() => setEyeState("idle")}
-                    placeholder="Your name" required />
+              {/* Sparkle Brand Mark */}
+              <FadeUp delay={0} show={showCard}>
+                <div className="anim-sparkle-wrap">
+                  <Sparkle size={28} />
                 </div>
               </FadeUp>
 
-              <FadeUp delay={0.24} show={showCard}>
-                <div className="anim-field">
-                  <label className="anim-label">Email</label>
-                  <input className="anim-input" type="email" value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    onFocus={() => setEyeState("watching")}
-                    onBlur={() => setEyeState("idle")}
-                    placeholder="you@example.com" required />
-                </div>
+              {/* Headings */}
+              <FadeUp delay={0.06} show={showCard}>
+                <h1 className="anim-heading">Join HackaMate!</h1>
+              </FadeUp>
+              <FadeUp delay={0.12} show={showCard}>
+                <p className="anim-subtext">Create your account to start matching</p>
               </FadeUp>
 
-              <FadeUp delay={0.29} show={showCard}>
-                <div className="anim-field">
-                  <label className="anim-label">Password</label>
-                  <div className="anim-pw-wrap">
-                    <input className="anim-input" type={showPw ? "text" : "password"}
-                      value={password} onChange={e => setPassword(e.target.value)}
-                      onFocus={() => setEyeState("shy")}
-                      onBlur={() => setEyeState("idle")}
-                      style={{ paddingRight: 32 }} required />
-                    <button type="button" className="anim-eye-btn" onClick={() => setShowPw(v => !v)}>
-                      <EyeIcon open={showPw} />
-                    </button>
+              {/* SignUp Form */}
+              <form className="anim-form" onSubmit={handleSubmit} noValidate>
+                {/* Full Name */}
+                <FadeUp delay={0.16} show={showCard}>
+                  <div className={`anim-field ${nameError ? "has-error" : ""}`}>
+                    <label className="anim-label" htmlFor="signup-name">
+                      Full Name
+                    </label>
+                    <input
+                      id="signup-name"
+                      className="anim-input"
+                      type="text"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (nameTouched) setNameTouched(true);
+                      }}
+                      onFocus={() => setEyeState("watching")}
+                      onBlur={() => {
+                        setNameTouched(true);
+                        setEyeState("idle");
+                      }}
+                      placeholder="Alex Chen"
+                      required
+                      autoComplete="name"
+                    />
+                    {nameError && (
+                      <div className="anim-error-text">{nameError}</div>
+                    )}
                   </div>
-                </div>
-              </FadeUp>
+                </FadeUp>
 
-              <FadeUp delay={0.34} show={showCard}>
-                <div className="anim-field">
-                  <label className="anim-label">Confirm Password</label>
-                  <input className="anim-input" type="password"
-                    value={confirmPw} onChange={e => setConfirmPw(e.target.value)}
-                    onFocus={() => setEyeState("shy")}
-                    onBlur={() => setEyeState("idle")} required />
-                </div>
-              </FadeUp>
+                {/* Email Field */}
+                <FadeUp delay={0.2} show={showCard}>
+                  <div className={`anim-field ${emailError ? "has-error" : ""}`}>
+                    <label className="anim-label" htmlFor="signup-email">
+                      Email
+                    </label>
+                    <input
+                      id="signup-email"
+                      className="anim-input"
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (emailTouched) setEmailTouched(true);
+                      }}
+                      onFocus={() => setEyeState("watching")}
+                      onBlur={() => {
+                        setEmailTouched(true);
+                        setEyeState("idle");
+                      }}
+                      placeholder="alex@gmail.com"
+                      required
+                      autoComplete="email"
+                    />
+                    {emailError && (
+                      <div className="anim-error-text">{emailError}</div>
+                    )}
+                  </div>
+                </FadeUp>
 
-              <FadeUp delay={0.39} show={showCard}>
-                <button className="anim-btn-primary" onClick={handleSubmit} type="button" style={{ marginTop: 8 }}>
-                  {submitting ? "Creating account\u2026" : "Create Account"}
-                </button>
-              </FadeUp>
+                {/* Password Field */}
+                <FadeUp delay={0.24} show={showCard}>
+                  <div className={`anim-field ${passwordError ? "has-error" : ""}`}>
+                    <label className="anim-label" htmlFor="signup-password">
+                      Password
+                    </label>
+                    <div className="anim-pw-wrap">
+                      <input
+                        id="signup-password"
+                        className="anim-input"
+                        type={showPw ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          if (passwordTouched) setPasswordTouched(true);
+                        }}
+                        onFocus={() => setEyeState("shy")}
+                        onBlur={() => {
+                          setPasswordTouched(true);
+                          setEyeState("idle");
+                        }}
+                        style={{ paddingRight: 32 }}
+                        placeholder="••••••••••••"
+                        required
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        className="anim-eye-btn"
+                        onClick={() => setShowPw((v) => !v)}
+                        aria-label={showPw ? "Hide password" : "Show password"}
+                      >
+                        <EyeIcon open={showPw} />
+                      </button>
+                    </div>
+                    {passwordError && (
+                      <div className="anim-error-text">{passwordError}</div>
+                    )}
+                  </div>
+                </FadeUp>
 
-              <FadeUp delay={0.44} show={showCard}>
-                <button className="anim-btn-secondary" type="button">
-                  <GitHubIcon /> Sign up with GitHub
-                </button>
-              </FadeUp>
+                {/* Confirm Password Field */}
+                <FadeUp delay={0.28} show={showCard}>
+                  <div className={`anim-field ${confirmError ? "has-error" : ""}`}>
+                    <label className="anim-label" htmlFor="signup-confirm">
+                      Confirm Password
+                    </label>
+                    <input
+                      id="signup-confirm"
+                      className="anim-input"
+                      type="password"
+                      value={confirmPw}
+                      onChange={(e) => {
+                        setConfirmPw(e.target.value);
+                        if (confirmTouched) setConfirmTouched(true);
+                      }}
+                      onFocus={() => setEyeState("shy")}
+                      onBlur={() => {
+                        setConfirmTouched(true);
+                        setEyeState("idle");
+                      }}
+                      placeholder="••••••••••••"
+                      required
+                      autoComplete="new-password"
+                    />
+                    {confirmError && (
+                      <div className="anim-error-text">{confirmError}</div>
+                    )}
+                  </div>
+                </FadeUp>
 
-              <FadeUp delay={0.49} show={showCard}>
-                <p className="anim-footer">Already have an account? <a href="#/login">Log in</a></p>
-              </FadeUp>
+                {/* Primary Button */}
+                <FadeUp delay={0.32} show={showCard}>
+                  <button
+                    className="anim-btn-primary"
+                    type="submit"
+                    disabled={submitting}
+                    style={{ marginTop: 8 }}
+                  >
+                    {submitting ? "Creating account…" : "Create Account"}
+                  </button>
+                </FadeUp>
+
+                {/* Google Sign Up */}
+                <FadeUp delay={0.36} show={showCard}>
+                  <button
+                    className="anim-btn-secondary"
+                    type="button"
+                    onClick={() => {
+                      setSubmitting(true);
+                      setTimeout(() => {
+                        window.location.hash = "#/dashboard";
+                      }, 500);
+                    }}
+                  >
+                    <GoogleIcon /> Sign up with Google
+                  </button>
+                </FadeUp>
+
+                {/* Footer Line */}
+                <FadeUp delay={0.4} show={showCard}>
+                  <p className="anim-footer">
+                    Already have an account? <a href="#/login">Log in</a>
+                  </p>
+                </FadeUp>
+              </form>
             </div>
           </div>
         </motion.div>

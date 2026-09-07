@@ -8,17 +8,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eef0f7;
+  background: #14161d; /* Dark backdrop like reference mockup */
   position: relative;
   overflow: hidden;
   font-family: var(--font-body);
+  padding: 24px;
 }
 
 /* ── Violet loader overlay ── */
 .anim-loader {
   position: fixed;
   inset: 0;
-  background: var(--violet);
+  background: var(--violet, #2563eb);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,7 +30,6 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  /* goo filter applied via inline style / SVG defs */
   filter: url(#goo);
 }
 
@@ -43,100 +43,110 @@
 /* ── Skip button ── */
 .anim-skip {
   position: fixed;
-  top: 20px;
-  right: 24px;
+  top: 24px;
+  right: 28px;
   z-index: 70;
-  background: rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.35);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #fff;
-  padding: 6px 18px;
+  padding: 7px 18px;
   border-radius: 999px;
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  transition: background 0.15s;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
 }
 .anim-skip.dark {
-  background: rgba(0,0,0,0.07);
-  border-color: var(--line);
-  color: var(--ink);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
-.anim-skip:hover { background: rgba(255,255,255,0.28); }
-.anim-skip.dark:hover { background: rgba(0,0,0,0.12); }
+.anim-skip:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
 
-/* ── Split card ── */
+/* ── Split card (Exact 45/55 ratio & smooth rounded corners) ── */
 .anim-card {
   display: flex;
-  width: 860px;
-  min-height: 540px;
-  border-radius: 24px;
+  width: 100%;
+  max-width: 880px;
+  min-height: 560px;
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 32px 80px -16px rgba(0,0,0,0.18), 0 8px 24px -4px rgba(0,0,0,0.08);
+  box-shadow: 0 32px 80px -12px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.15);
   position: relative;
+  background: #ffffff;
 }
 
-/* Left illustration panel */
+/* Left illustration panel (Light gray background matching reference) */
 .anim-left {
-  width: 45%;
-  background: #dde1f0;
+  width: 46%;
+  background: #e9ecf2;
   position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   overflow: hidden;
-  min-height: 540px;
-}
-
-/* Subtle dot-grid decoration */
-.anim-left::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(37,99,235,0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
-  pointer-events: none;
+  min-height: 560px;
 }
 
 /* Right form panel */
 .anim-right {
-  width: 55%;
+  width: 54%;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 44px;
+  padding: 48px 48px;
   position: relative;
 }
 
 .anim-form-inner {
   width: 100%;
-  max-width: 340px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-/* ── Sparkle logomark ── */
+/* ── Sparkle Brand Glyph ── */
+.anim-sparkle-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
 .anim-sparkle {
   display: block;
-  margin-bottom: 22px;
-  color: var(--violet);
 }
 
 /* ── Headings ── */
 .anim-heading {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   font-weight: 700;
-  color: var(--ink);
+  color: #14161d;
   margin: 0 0 6px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  text-align: center;
 }
 
 .anim-subtext {
-  font-size: 0.875rem;
-  color: var(--muted);
+  font-size: 0.88rem;
+  color: var(--muted, #64748b);
   margin: 0 0 28px;
+  text-align: center;
+}
+
+/* ── Form wrapper ── */
+.anim-form {
+  width: 100%;
+  text-align: left;
 }
 
 /* ── Form fields ── */
@@ -147,12 +157,11 @@
 
 .anim-label {
   display: block;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--faint);
-  margin-bottom: 5px;
+  font-size: 0.72rem;
   font-weight: 600;
+  color: #64748b;
+  margin-bottom: 4px;
+  transition: color 0.2s ease;
 }
 
 .anim-pw-wrap {
@@ -162,16 +171,47 @@
 .anim-input {
   width: 100%;
   border: none;
-  border-bottom: 1.5px solid var(--line);
+  border-bottom: 1.5px solid #e2e8f0;
   padding: 8px 0;
-  font-size: 1rem;
+  font-size: 0.98rem;
   background: transparent;
   outline: none;
-  color: var(--ink);
+  color: #14161d;
   font-family: var(--font-body);
   transition: border-color 0.2s ease;
 }
-.anim-input:focus { border-bottom-color: var(--violet); }
+
+.anim-input:focus {
+  border-bottom-color: var(--violet, #2563eb);
+}
+
+.anim-input::placeholder {
+  color: #94a3b8;
+  font-size: 0.92rem;
+}
+
+/* ── Error state on fields (Section 9) ── */
+.anim-field.has-error .anim-label {
+  color: #ef4444;
+}
+
+.anim-field.has-error .anim-input {
+  border-bottom-color: #ef4444;
+}
+
+.anim-error-text {
+  font-size: 0.74rem;
+  color: #ef4444;
+  margin-top: 4px;
+  font-weight: 500;
+  animation: anim-shake 0.3s ease;
+}
+
+@keyframes anim-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
 
 .anim-eye-btn {
   position: absolute;
@@ -181,13 +221,15 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--faint);
+  color: #94a3b8;
   padding: 4px;
   display: flex;
   align-items: center;
   transition: color 0.15s;
 }
-.anim-eye-btn:hover { color: var(--ink); }
+.anim-eye-btn:hover {
+  color: #14161d;
+}
 
 /* ── Checkbox row ── */
 .anim-check-row {
@@ -196,106 +238,121 @@
   justify-content: space-between;
   margin-bottom: 24px;
   font-size: 0.82rem;
-  color: var(--muted);
+  color: #64748b;
 }
+
 .anim-check-row label {
   display: flex;
   align-items: center;
   gap: 7px;
   cursor: pointer;
+  user-select: none;
 }
+
 .anim-check-row input[type="checkbox"] {
-  accent-color: var(--violet);
-  width: 14px;
-  height: 14px;
+  accent-color: var(--violet, #2563eb);
+  width: 15px;
+  height: 15px;
   cursor: pointer;
 }
+
 .anim-forgot {
-  color: var(--violet);
-  font-weight: 600;
+  color: #64748b;
   text-decoration: none;
   font-size: 0.82rem;
+  transition: color 0.15s;
 }
-.anim-forgot:hover { text-decoration: underline; }
+.anim-forgot:hover {
+  color: var(--violet, #2563eb);
+  text-decoration: underline;
+}
 
 /* ── Buttons ── */
 .anim-btn-primary {
   width: 100%;
   height: 48px;
   border-radius: 999px;
-  background: var(--ink);
-  color: #fff;
+  background: #14161d;
+  color: #ffffff;
   font-size: 0.95rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
   margin-bottom: 12px;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: all 0.15s ease;
   font-family: var(--font-body);
   letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.anim-btn-primary:hover { opacity: 0.88; }
-.anim-btn-primary:active { transform: scale(0.98); }
+
+.anim-btn-primary:hover {
+  background: #232733;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.anim-btn-primary:active {
+  transform: scale(0.98);
+}
 
 .anim-btn-secondary {
   width: 100%;
   height: 48px;
   border-radius: 999px;
-  background: var(--bg-alt);
-  border: 1.5px solid var(--line);
-  color: var(--ink);
-  font-size: 0.88rem;
-  font-weight: 500;
+  background: #f1f3f7;
+  border: 1px solid #e2e8f0;
+  color: #14161d;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 28px;
-  transition: background 0.15s;
+  gap: 10px;
+  margin-bottom: 24px;
+  transition: all 0.15s ease;
   font-family: var(--font-body);
 }
-.anim-btn-secondary:hover { background: #e9ecf5; }
+
+.anim-btn-secondary:hover {
+  background: #e6e9f0;
+  border-color: #cbd5e1;
+}
 
 /* ── Footer link ── */
 .anim-footer {
   text-align: center;
   font-size: 0.82rem;
-  color: var(--muted);
+  color: #64748b;
+  margin: 0;
 }
+
 .anim-footer a {
-  color: var(--violet);
+  color: #14161d;
   font-weight: 600;
   text-decoration: none;
 }
-.anim-footer a:hover { text-decoration: underline; }
-
-/* ── Virtual cursor ── */
-.anim-cursor {
-  position: absolute;
-  pointer-events: none;
-  z-index: 40;
-  top: 0;
-  left: 0;
+.anim-footer a:hover {
+  color: var(--violet, #2563eb);
+  text-decoration: underline;
 }
 
-/* ── Demo typed text overlay ── */
-.anim-demo-input {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  color: var(--ink);
-  font-family: var(--font-body);
-  pointer-events: none;
-  padding: 8px 0;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .anim-card { width: 96vw; flex-direction: column; }
-  .anim-left  { width: 100%; height: 220px; min-height: 220px; }
-  .anim-right { width: 100%; padding: 36px 28px; }
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .anim-card {
+    flex-direction: column;
+    max-width: 440px;
+    min-height: auto;
+  }
+  .anim-left {
+    width: 100%;
+    height: 220px;
+    min-height: 220px;
+  }
+  .anim-right {
+    width: 100%;
+    padding: 36px 28px;
+  }
 }
