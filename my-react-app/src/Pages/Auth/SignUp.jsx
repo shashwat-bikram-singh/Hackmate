@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, useCallback } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import MascotScene from "./MascotScene.jsx";
 import "./SignUp.css";
@@ -15,12 +15,13 @@ function Sparkle() {
 }
 
 function EyeIcon({ open }) {
-  return open ? (
+  if (open) return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
       <circle cx="12" cy="12" r="3"/>
     </svg>
-  ) : (
+  );
+  return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
       <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
       <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
@@ -37,21 +38,13 @@ function GitHubIcon() {
   );
 }
 
-function CursorSVG() {
-  return (
-    <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
-      <path d="M3 1L3 20L8 15.5L12.5 23.5L15.5 22L11 14L18.5 13L3 1Z"
-        fill="white" stroke="#14161d" strokeWidth="1.5" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function FadeUp({ children, delay, visible }) {
+function FadeUp({ children, delay, show }) {
+  if (!show) return null;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay }}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}
     </motion.div>
@@ -59,267 +52,168 @@ function FadeUp({ children, delay, visible }) {
 }
 
 export default function SignUp() {
-  const [phase, setPhase]           = useState("loader");
-  const [dotsClose, setDotsClose]   = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
-  const [dropped, setDropped]       = useState(false);
-  const [assembled, setAssembled]   = useState(false);
-  const [eyeState, setEyeState]     = useState("idle");
+  const [phase, setPhase] = useState("loader");
+  const timers = useRef([]);
+  const later = (fn, ms) => { const id = setTimeout(fn, ms); timers.current.push(id); };
+  const killTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
 
-  const [name, setName]             = useState("");
-  const [email, setEmail]           = useState("");
-  const [password, setPassword]     = useState("");
-  const [confirmPw, setConfirmPw]   = useState("");
-  const [showPw, setShowPw]         = useState(false);
+  const [name, setName]           = useState("");
+  const [email, setEmail]         = useState("");
+  const [password, setPassword]   = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [showPw, setShowPw]       = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [demoName, setDemoName]     = useState("");
-  const [demoEmail, setDemoEmail]   = useState("");
-  const [demoPw, setDemoPw]         = useState("");
-  const [cursorPos, setCursorPos]   = useState({ x: -60, y: -60 });
-  const [btnScale, setBtnScale]     = useState(1);
-  const [loading, setLoading]       = useState(false);
+  const [eyeState, setEyeState]   = useState("idle");
+  const [dropped, setDropped]     = useState(false);
+  const [assembled, setAssembled] = useState(false);
+  const [dotsClose, setDotsClose] = useState(false);
 
-  const timerRefs = useRef([]);
-  const addTimer = (fn, ms) => { const t = setTimeout(fn, ms); timerRefs.current.push(t); return t; };
-  const clearTimers = () => { timerRefs.current.forEach(clearTimeout); timerRefs.current = []; };
-
-  const prefersReducedMotion = typeof window !== "undefined"
-    && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const goInteractive = useCallback(() => {
-    clearTimers();
+  function skip() {
+    killTimers();
     setPhase("interactive");
     setDropped(true);
     setAssembled(true);
-    setFormVisible(true);
-  }, []);
+    setEyeState("idle");
+  }
 
   useEffect(() => {
-    if (prefersReducedMotion) { goInteractive(); return; }
-
-    addTimer(() => setDotsClose(true), 1600);
-    addTimer(() => { setPhase("reveal"); setFormVisible(true); }, 2200);
-    addTimer(() => { setPhase("mascot-drop"); setDropped(true); }, 3400);
-    addTimer(() => { setPhase("assembled"); setAssembled(true); setEyeState("idle"); }, 5600);
-    addTimer(() => { setPhase("demo"); runDemo(); }, 7800);
-
-    return clearTimers;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function runDemo() {
-    const NAME  = "Alex Chen";
-    const EMAIL = "alex@hackmate.io";
-    const PW    = "join@hack1";
-
-    addTimer(() => { setCursorPos({ x: 140, y: 150 }); setEyeState("watching"); }, 300);
-    NAME.split("").forEach((ch, i) => {
-      addTimer(() => setDemoName(prev => prev + ch), 700 + i * 90);
-    });
-
-    const afterName = 700 + NAME.length * 90;
-    addTimer(() => { setCursorPos({ x: 140, y: 220 }); }, afterName + 300);
-    EMAIL.split("").forEach((ch, i) => {
-      addTimer(() => setDemoEmail(prev => prev + ch), afterName + 700 + i * 85);
-    });
-
-    const afterEmail = afterName + 700 + EMAIL.length * 85;
-    addTimer(() => { setCursorPos({ x: 140, y: 295 }); setEyeState("shy"); }, afterEmail + 300);
-    PW.split("").forEach((_, i) => {
-      addTimer(() => setDemoPw(prev => prev + "\u2022"), afterEmail + 700 + i * 80);
-    });
-
-    const afterPw = afterEmail + 700 + PW.length * 80;
-    addTimer(() => { setCursorPos({ x: 160, y: 390 }); setBtnScale(1.04); setEyeState("watching"); }, afterPw + 600);
-    addTimer(() => { setBtnScale(0.97); }, afterPw + 1000);
-    addTimer(() => { setBtnScale(1); setLoading(true); }, afterPw + 1250);
-    addTimer(() => { setLoading(false); goInteractive(); }, afterPw + 2000);
-  }
+    later(() => setDotsClose(true), 1500);
+    later(() => setPhase("reveal"), 2200);
+    later(() => { setDropped(true); }, 3400);
+    later(() => { setAssembled(true); setEyeState("idle"); }, 5200);
+    later(() => setPhase("interactive"), 6500);
+    return killTimers;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => window.location.hash = "#/dashboard", 900);
+    setSubmitting(true);
+    setTimeout(() => { window.location.hash = "#/dashboard"; }, 800);
   }
 
-  const inDemo      = phase === "demo";
-  const inLoader    = phase === "loader";
-  const inReveal    = phase === "reveal" || phase === "mascot-drop" || phase === "assembled";
-  const interactive = phase === "interactive";
+  const showLoader = phase === "loader";
+  const showCard   = phase !== "loader";
+  const isLive     = phase === "interactive";
 
   return (
     <div className="anim-root">
-      <svg style={{ position: "absolute", width: 0, height: 0 }}>
+      <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
         <defs>
-          <filter id="goo">
+          <filter id="goo2">
             <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/>
             <feColorMatrix in="blur" mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="goo"/>
-            <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="goo2"/>
+            <feComposite in="SourceGraphic" in2="goo2" operator="atop"/>
           </filter>
         </defs>
       </svg>
 
       <AnimatePresence>
-        {inLoader && (
-          <motion.div
-            className="anim-loader"
-            exit={{ opacity: 0, scale: 1.08 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="anim-loader-dots">
+        {showLoader && (
+          <motion.div key="loader" className="anim-loader"
+            exit={{ opacity: 0 }} transition={{ duration: 0.45 }}>
+            <div className="anim-loader-dots" style={{ filter: "url(#goo2)" }}>
               <motion.div className="anim-dot"
-                animate={{ scale: [0.8, 1.2, 0.8], x: dotsClose ? 10 : 0 }}
-                transition={{ scale: { duration: 0.9, repeat: Infinity, ease: "easeInOut" },
-                              x: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
-              />
+                animate={{ scale: [0.8, 1.15, 0.8], x: dotsClose ? 10 : 0 }}
+                transition={{ scale: { duration: 0.85, repeat: Infinity, ease: "easeInOut" },
+                              x: { duration: 0.45, ease: "easeInOut" } }} />
               <motion.div className="anim-dot"
-                animate={{ scale: [1.2, 0.8, 1.2], x: dotsClose ? -10 : 0 }}
-                transition={{ scale: { duration: 0.9, repeat: Infinity, ease: "easeInOut", delay: 0.15 },
-                              x: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
-              />
+                animate={{ scale: [1.15, 0.8, 1.15], x: dotsClose ? -10 : 0 }}
+                transition={{ scale: { duration: 0.85, repeat: Infinity, ease: "easeInOut", delay: 0.12 },
+                              x: { duration: 0.45, ease: "easeInOut" } }} />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {!interactive && (
-        <button className={"anim-skip" + (inLoader ? "" : " dark")} onClick={goInteractive}>
-          Skip &rarr;
-        </button>
+      {!isLive && (
+        <button className={"anim-skip" + (showLoader ? "" : " dark")} onClick={skip}>Skip &rarr;</button>
       )}
 
-      <AnimatePresence>
-        {(inReveal || inDemo || interactive) && (
-          <motion.div
-            className="anim-card"
-            initial={{ scale: 0.88, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 220, damping: 22 }}
-          >
-            <div className="anim-left">
-              <MascotScene
-                eyeState={eyeState}
-                dropped={dropped}
-                assembled={assembled}
-              />
-            </div>
+      {showCard && (
+        <motion.div className="anim-card"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 22 }}>
 
-            <div className="anim-right">
-              {inDemo && (
-                <motion.div
-                  className="anim-cursor"
-                  animate={{ x: cursorPos.x, y: cursorPos.y }}
-                  transition={{ type: "spring", stiffness: 160, damping: 22 }}
-                >
-                  <CursorSVG />
-                </motion.div>
-              )}
+          <div className="anim-left">
+            <MascotScene eyeState={eyeState} dropped={dropped} assembled={assembled} />
+          </div>
 
-              <div className="anim-form-inner">
-                <FadeUp delay={0} visible={formVisible}><Sparkle /></FadeUp>
+          <div className="anim-right">
+            <div className="anim-form-inner">
+              <FadeUp delay={0} show={showCard}><Sparkle /></FadeUp>
+              <FadeUp delay={0.08} show={showCard}><h1 className="anim-heading">Join HackaMate!</h1></FadeUp>
+              <FadeUp delay={0.14} show={showCard}><p className="anim-subtext">Create your account and start building</p></FadeUp>
 
-                <FadeUp delay={0.08} visible={formVisible}>
-                  <h1 className="anim-heading">Join HackaMate!</h1>
-                </FadeUp>
+              <FadeUp delay={0.19} show={showCard}>
+                <div className="anim-field">
+                  <label className="anim-label">Full Name</label>
+                  <input className="anim-input" type="text" value={name}
+                    onChange={e => setName(e.target.value)}
+                    onFocus={() => setEyeState("watching")}
+                    onBlur={() => setEyeState("idle")}
+                    placeholder="Your name" required />
+                </div>
+              </FadeUp>
 
-                <FadeUp delay={0.14} visible={formVisible}>
-                  <p className="anim-subtext">Create your account and start building</p>
-                </FadeUp>
+              <FadeUp delay={0.24} show={showCard}>
+                <div className="anim-field">
+                  <label className="anim-label">Email</label>
+                  <input className="anim-input" type="email" value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    onFocus={() => setEyeState("watching")}
+                    onBlur={() => setEyeState("idle")}
+                    placeholder="you@example.com" required />
+                </div>
+              </FadeUp>
 
-                <FadeUp delay={0.19} visible={formVisible}>
-                  <div className="anim-field">
-                    <label className="anim-label">Full Name</label>
-                    {interactive ? (
-                      <input className="anim-input" type="text" value={name}
-                        onChange={e => setName(e.target.value)}
-                        onFocus={() => setEyeState("watching")}
-                        onBlur={() => setEyeState("idle")}
-                        placeholder="Your name" required />
-                    ) : (
-                      <input className="anim-input" type="text" readOnly value={demoName} tabIndex={-1} />
-                    )}
-                  </div>
-                </FadeUp>
-
-                <FadeUp delay={0.24} visible={formVisible}>
-                  <div className="anim-field">
-                    <label className="anim-label">Email</label>
-                    {interactive ? (
-                      <input className="anim-input" type="email" value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        onFocus={() => setEyeState("watching")}
-                        onBlur={() => setEyeState("idle")}
-                        placeholder="you@example.com" required />
-                    ) : (
-                      <input className="anim-input" type="text" readOnly value={demoEmail} tabIndex={-1} />
-                    )}
-                  </div>
-                </FadeUp>
-
-                <FadeUp delay={0.29} visible={formVisible}>
-                  <div className="anim-field">
-                    <label className="anim-label">Password</label>
-                    <div className="anim-pw-wrap">
-                      {interactive ? (
-                        <input className="anim-input" type={showPw ? "text" : "password"}
-                          value={password} onChange={e => setPassword(e.target.value)}
-                          onFocus={() => setEyeState("shy")}
-                          onBlur={() => setEyeState("idle")}
-                          style={{ paddingRight: 32 }} required />
-                      ) : (
-                        <input className="anim-input" type="password" readOnly
-                          value={demoPw} style={{ paddingRight: 32 }} tabIndex={-1} />
-                      )}
-                      {interactive && (
-                        <button type="button" className="anim-eye-btn" onClick={() => setShowPw(v => !v)}>
-                          <EyeIcon open={showPw} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </FadeUp>
-
-                {interactive && (
-                  <div className="anim-field">
-                    <label className="anim-label">Confirm Password</label>
-                    <input className="anim-input" type="password"
-                      value={confirmPw} onChange={e => setConfirmPw(e.target.value)}
+              <FadeUp delay={0.29} show={showCard}>
+                <div className="anim-field">
+                  <label className="anim-label">Password</label>
+                  <div className="anim-pw-wrap">
+                    <input className="anim-input" type={showPw ? "text" : "password"}
+                      value={password} onChange={e => setPassword(e.target.value)}
                       onFocus={() => setEyeState("shy")}
                       onBlur={() => setEyeState("idle")}
-                      required />
+                      style={{ paddingRight: 32 }} required />
+                    <button type="button" className="anim-eye-btn" onClick={() => setShowPw(v => !v)}>
+                      <EyeIcon open={showPw} />
+                    </button>
                   </div>
-                )}
+                </div>
+              </FadeUp>
 
-                <FadeUp delay={0.35} visible={formVisible}>
-                  <motion.button
-                    className="anim-btn-primary"
-                    animate={{ scale: btnScale }}
-                    transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                    onClick={interactive ? handleSubmit : undefined}
-                    type={interactive ? "submit" : "button"}
-                    style={{ marginTop: 8 }}
-                  >
-                    {loading ? "Creating account…" : "Create Account"}
-                  </motion.button>
-                </FadeUp>
+              <FadeUp delay={0.34} show={showCard}>
+                <div className="anim-field">
+                  <label className="anim-label">Confirm Password</label>
+                  <input className="anim-input" type="password"
+                    value={confirmPw} onChange={e => setConfirmPw(e.target.value)}
+                    onFocus={() => setEyeState("shy")}
+                    onBlur={() => setEyeState("idle")} required />
+                </div>
+              </FadeUp>
 
-                <FadeUp delay={0.41} visible={formVisible}>
-                  <button className="anim-btn-secondary" type="button">
-                    <GitHubIcon /> Sign up with GitHub
-                  </button>
-                </FadeUp>
+              <FadeUp delay={0.39} show={showCard}>
+                <button className="anim-btn-primary" onClick={handleSubmit} type="button" style={{ marginTop: 8 }}>
+                  {submitting ? "Creating account\u2026" : "Create Account"}
+                </button>
+              </FadeUp>
 
-                <FadeUp delay={0.47} visible={formVisible}>
-                  <p className="anim-footer">
-                    Already have an account? <a href="#/login">Log in</a>
-                  </p>
-                </FadeUp>
-              </div>
+              <FadeUp delay={0.44} show={showCard}>
+                <button className="anim-btn-secondary" type="button">
+                  <GitHubIcon /> Sign up with GitHub
+                </button>
+              </FadeUp>
+
+              <FadeUp delay={0.49} show={showCard}>
+                <p className="anim-footer">Already have an account? <a href="#/login">Log in</a></p>
+              </FadeUp>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

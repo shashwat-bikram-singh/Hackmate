@@ -1,11 +1,13 @@
-﻿/* ─── Mascot Scene ─── */
+﻿/* ═══════════════════════════════════════════
+   Mascot Scene — Cursor-Reactive Googly Eyes
+   ═══════════════════════════════════════════ */
+
 .mascot-area {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 0;
   position: relative;
   overflow: hidden;
 }
@@ -13,11 +15,12 @@
 .mascot-group {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
+  gap: 0;
+  position: relative;
   padding-bottom: 0;
 }
 
-/* individual character wrapper */
+/* ── Character wrapper ── */
 .mascot-char {
   position: relative;
   display: flex;
@@ -25,78 +28,110 @@
   align-items: center;
 }
 
-/* shapes */
+/* ── Body shape ── */
 .mascot-body {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
-/* eyes container */
+/* ── Face container (eyes + mouth) ── */
 .mascot-face {
   position: absolute;
-  top: 22%;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  pointer-events: none;
 }
 
+/* ── Eyes row ── */
 .mascot-eyes {
   display: flex;
-  gap: 6px;
+  gap: 7px;
   align-items: center;
 }
 
-/* open eye dot */
+/* ── Single eye — white sclera with pupil ── */
 .mascot-eye {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+}
+
+/* Pupil — positioned via inline transform from JS */
+.mascot-pupil {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: #14161d;
-  transition: all 0.3s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  pointer-events: none;
 }
 
-/* shy / closed eye */
-.mascot-eye.shy {
-  width: 8px;
-  height: 2px;
-  border-radius: 2px;
+/* ── Shy / closed eye state ── */
+.mascot-eye.closed {
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.mascot-eye.closed .mascot-pupil {
+  display: none;
+}
+.mascot-eye.closed::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 3px;
   background: #14161d;
+  border-radius: 0 0 6px 6px;
 }
 
-/* mouth */
+/* ── Mouth ── */
 .mascot-mouth {
   width: 14px;
   height: 2px;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.3);
   border-radius: 2px;
-  margin-top: 3px;
   transition: all 0.3s ease;
 }
 
+/* Smile variant */
 .mascot-mouth.smile {
-  border-radius: 0 0 8px 8px;
-  height: 5px;
-  width: 14px;
-  border-bottom: 2px solid rgba(0,0,0,0.35);
+  width: 12px;
+  height: 6px;
   background: transparent;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
 }
 
-/* idle bob */
+/* ── Idle bob keyframes ── */
 @keyframes mascot-bob {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-6px); }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
 }
 
-.mascot-char.bob-0 { animation: mascot-bob 2.4s ease-in-out 0s infinite; }
-.mascot-char.bob-1 { animation: mascot-bob 2.4s ease-in-out 0.4s infinite; }
-.mascot-char.bob-2 { animation: mascot-bob 2.4s ease-in-out 0.8s infinite; }
-.mascot-char.bob-3 { animation: mascot-bob 2.4s ease-in-out 1.2s infinite; }
+.mascot-char.bob-0 { animation: mascot-bob 2.4s ease-in-out 0s    infinite; }
+.mascot-char.bob-1 { animation: mascot-bob 2.4s ease-in-out 0.4s  infinite; }
+.mascot-char.bob-2 { animation: mascot-bob 2.4s ease-in-out 0.8s  infinite; }
+.mascot-char.bob-3 { animation: mascot-bob 2.4s ease-in-out 1.2s  infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .mascot-char { animation: none !important; }
