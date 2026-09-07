@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HackaMate · Landing Animation Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     HackaMate — Landing Animation Preview (standalone, vanilla)
+     Mirrors the real site's theme tokens, copy, and the motion
+     added to the React app: intro preloader -> navbar+hero
+     entrance -> on-scroll section reveals (staggered grids,
+     team left-slide, cta scale, footer fade).
+     Double-click to view. Use "Replay" to watch it again.
+     Honors prefers-reduced-motion (everything shows instantly).
+     ============================================================ */
+
+  :root {
+    color-scheme: light;
+    --ink: #14161d;
+    --ink-2: #2b2f3a;
+    --muted: #5c6472;
+    --faint: #8a91a1;
+    --bg: #ffffff;
+    --bg-alt: #f5f6fa;
+    --line: #e6e8ee;
+    --panel: #101219;
+    --violet: #2563eb;
+    --violet-dark: #1d4ed8;
+    --violet-soft: #eff6ff;
+    --violet-lift: #60a5fa;
+    --live: #16c265;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --radius: 14px;
+    --radius-sm: 10px;
+
+    /* shared easings, matched to the React transitions */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-inout: cubic-bezier(0.76, 0, 0.24, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: -0.02em; }
+  p { margin: 0; }
+  a { color: inherit; text-decoration: none; }
+
+  .container { width: min(1160px, 92vw); margin: 0 auto; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+    display: inline-block;
+  }
+  .eyebrow::before { content: "// "; color: var(--faint); }
+
+  .section-head { max-width: 640px; margin: 0 auto 46px; text-align: center; }
+  .section-title { font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 700; margin-top: 14px; line-height: 1.12; }
+  .section-text { margin-top: 14px; color: var(--muted); font-size: 1.05rem; line-height: 1.6; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 11px 20px; border-radius: var(--radius-sm);
+    font-weight: 600; font-size: 0.94rem; font-family: var(--font-body);
+    cursor: pointer; border: 1px solid transparent; transition: transform .18s ease, background .2s ease, color .2s ease;
+  }
+  .btn-primary { background: var(--violet); color: #fff; }
+  .btn-primary:hover { background: var(--violet-dark); }
+  .btn-outline { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-outline:hover { border-color: var(--violet); color: var(--violet); }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid rgba(226,232,240,0.8);
+    /* entrance state (drop-in), released when body.entered is set */
+    opacity: 0; transform: translateY(-18px);
+    transition: opacity .5s var(--ease-out), transform .5s var(--ease-out);
+  }
+  .navbar-inner { position: relative; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .navbar-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; color: var(--ink); }
+  .logo-accent { color: var(--violet); }
+  .navbar-tabs-nav {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 3px; padding: 4px;
+    border-radius: 9999px; border: 1px solid #bfdbfe;
+    background: linear-gradient(to bottom, #ffffff, #eff6ff);
+    box-shadow: inset 0 -2px 4px rgba(37,99,235,0.04), inset 0 1px 0 rgba(255,255,255,0.95), 0 4px 14px rgba(37,99,235,0.08);
+  }
+  .navbar-tab-btn {
+    position: relative; padding: 7px 18px; border-radius: 9999px;
+    font-size: 0.88rem; font-weight: 600; color: #475569; transition: color .2s ease;
+  }
+  .navbar-tab-btn.is-active { color: #fff; }
+  .navbar-active-pill {
+    position: absolute; inset: 0; border-radius: 9999px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 4px 14px rgba(37,99,235,0.38); z-index: 1;
+  }
+  .navbar-tab-text { position: relative; z-index: 2; }
+  .navbar-actions { display: flex; align-items: center; gap: 18px; }
+  .navbar-login { font-size: 0.92rem; font-weight: 600; }
+  .navbar-cta { padding: 9px 18px; }
+  @media (max-width: 860px) { .navbar-tabs-nav { display: none; } }
+
+  /* ===================== HERO ===================== */
+  .hero { position: relative; padding: 84px 0 80px; }
+  .hero-inner { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(40px, 5vw, 80px); align-items: center; }
+  .hero-left { max-width: 680px; }
+  .hero-title { font-size: clamp(2.6rem, 3.8vw, 4rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.035em; margin-top: 20px; }
+  .hero-text { margin-top: 20px; max-width: 540px; color: var(--muted); font-size: 1.12rem; line-height: 1.6; }
+  .hero-buttons { display: flex; gap: 14px; margin-top: 30px; }
+  .hero-social { display: flex; align-items: center; gap: 12px; margin-top: 34px; }
+  .avatars { display: flex; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; margin-left: -9px; }
+  .avatar:first-child { margin-left: 0; }
+  .hero-social-text { font-family: var(--font-mono); color: var(--muted); font-size: 0.82rem; }
+  .hero-right { display: flex; justify-content: flex-end; width: 100%; }
+  .dashboard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; box-shadow: 0 24px 48px -28px rgba(20,22,29,0.28); width: 100%; max-width: 580px; }
+  .dashboard-head h3 { font-size: 1.15rem; font-weight: 600; }
+  .dashboard-head p { margin-top: 3px; color: var(--muted); font-size: 0.9rem; }
+  .dashboard-search { width: 100%; margin-top: 18px; padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.9rem; }
+  .dashboard-label { display: flex; align-items: center; gap: 8px; margin-top: 22px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .dashboard-label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 3px rgba(22,194,101,0.16); }
+  .match-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+  .match { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 13px 15px; }
+  .match:hover { border-color: var(--violet); }
+  .match-title { font-weight: 600; font-size: 0.94rem; }
+  .match-meta { font-family: var(--font-mono); color: var(--muted); font-size: 0.76rem; }
+
+  /* Hero entrance states (released by body.entered) */
+  .hero-item { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); }
+  .hero-right { opacity: 0; transform: translateX(40px) scale(0.96); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+
+  body.entered .navbar { opacity: 1; transform: translateY(0); }
+  body.entered .hero-item { opacity: 1; transform: none; }
+  body.entered .hero-item:nth-child(1) { transition-delay: .06s; }
+  body.entered .hero-item:nth-child(2) { transition-delay: .15s; }
+  body.entered .hero-item:nth-child(3) { transition-delay: .24s; }
+  body.entered .hero-item:nth-child(4) { transition-delay: .33s; }
+  body.entered .hero-item:nth-child(5) { transition-delay: .42s; }
+  body.entered .hero-right { opacity: 1; transform: none; transition-delay: .18s; }
+
+  /* ===================== HOW IT WORKS ===================== */
+  .how { padding: 80px 0; background: var(--bg-alt); }
+  .how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .how-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; height: 100%; transition: transform .2s ease, box-shadow .2s ease; }
+  .how-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -24px rgba(20,22,29,0.35); }
+  .how-num { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--violet); }
+  .how-title { font-size: 1.15rem; font-weight: 600; margin-top: 12px; }
+  .how-text { margin-top: 8px; color: var(--muted); font-size: 0.95rem; line-height: 1.55; }
+
+  /* ===================== WHY ===================== */
+  .why { padding: 80px 0; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .why-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; height: 100%; transition: transform .2s ease, box-shadow .2s ease; }
+  .why-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -24px rgba(20,22,29,0.35); }
+  .why-dot { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; transition: transform .2s ease; }
+  .why-card:hover .why-dot { transform: scale(1.1) rotate(3deg); }
+  .why-title { font-size: 1.1rem; font-weight: 600; margin-top: 16px; }
+  .why-text { margin-top: 8px; color: var(--muted); font-size: 0.95rem; line-height: 1.55; }
+
+  /* ===================== TEAM ===================== */
+  .team { padding: 80px 0; background: var(--bg-alt); }
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 4vw, 64px); align-items: start; }
+  .team-heading { font-size: clamp(1.6rem, 2.4vw, 2.1rem); font-weight: 700; margin-top: 12px; }
+  .team-sub { margin-top: 12px; color: var(--muted); line-height: 1.6; }
+  .panel { margin-top: 24px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-weight: 600; }
+  .tag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--live); background: rgba(22,194,101,0.12); padding: 4px 9px; border-radius: 999px; }
+  .panel-meta { margin-top: 10px; color: var(--muted); font-size: 0.88rem; }
+  .role-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .role { font-size: 0.82rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--violet-soft); color: var(--violet-dark); }
+  .fake-toggle { margin-top: 20px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.85rem; font-weight: 600; }
+  .landing-builder-grid { display: grid; gap: 14px; margin-top: 24px; }
+  .builder-card { position: relative; height: 150px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); display: flex; align-items: flex-end; padding: 16px; color: #fff; transition: transform .25s ease, box-shadow .25s ease; }
+  .builder-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -22px rgba(20,22,29,0.5); }
+  .builder-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.15) 60%, transparent); }
+  .builder-info { position: relative; z-index: 1; }
+  .builder-sub { font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.9; }
+  .builder-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; margin-top: 2px; }
+
+  /* ===================== EVENTS ===================== */
+  .events { padding: 80px 0; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 32px; }
+  .filter { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 0.85rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .2s ease; }
+  .filter-active { background: var(--violet); color: #fff; border-color: var(--violet); }
+  .events-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .event-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; height: 100%; transition: transform .2s ease, box-shadow .2s ease; }
+  .event-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px -24px rgba(20,22,29,0.35); }
+  .event-tag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--violet); }
+  .event-title { font-size: 1.12rem; font-weight: 600; margin-top: 10px; }
+  .event-meta { display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.82rem; }
+  .event-prize { font-weight: 700; color: var(--ink); }
+  .event-days { color: var(--muted); font-family: var(--font-mono); }
+  .event-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .chip { font-size: 0.72rem; font-weight: 600; padding: 4px 9px; border-radius: 6px; background: var(--bg-alt); color: var(--ink-2); }
+  .event-btn { margin-top: 18px; }
+
+  /* ===================== CTA ===================== */
+  .cta { padding: 40px 0 90px; }
+  .cta-inner { background: var(--panel); border-radius: 24px; padding: clamp(40px, 6vw, 76px); text-align: center; color: #fff; }
+  .cta-title { font-size: clamp(2rem, 3.4vw, 3rem); font-weight: 700; }
+  .cta-text { margin-top: 14px; color: rgba(255,255,255,0.7); font-size: 1.08rem; }
+  .cta-btn { margin-top: 28px; background: var(--violet); color: #fff; }
+  .cta-btn:hover { background: var(--violet-lift); }
+
+  /* ===================== FOOTER ===================== */
+  .footer { background: var(--panel); color: rgba(255,255,255,0.7); padding: 60px 0 30px; }
+  .footer-inner { display: grid; grid-template-columns: 1.4fr 2fr; gap: 40px; }
+  .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: #fff; }
+  .footer-tagline { margin-top: 12px; max-width: 320px; line-height: 1.6; font-size: 0.92rem; }
+  .footer-socials { display: flex; gap: 10px; margin-top: 18px; }
+  .footer-social-btn { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); color: #fff; transition: background .2s ease, transform .2s ease; }
+  .footer-social-btn:hover { background: var(--violet); transform: translateY(-2px); }
+  .footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .footer-col { display: flex; flex-direction: column; gap: 10px; }
+  .footer-col-title { color: #fff; font-weight: 600; font-size: 0.92rem; margin-bottom: 4px; }
+  .footer-col a { font-size: 0.88rem; transition: color .2s ease; }
+  .footer-col a:hover { color: #fff; }
+  .footer-bottom { margin-top: 40px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: flex-end; }
+  .footer-bottom-socials { display: flex; gap: 18px; }
+  .footer-social-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; }
+
+  /* ===================== SCROLL REVEAL PRIMITIVE ===================== */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); will-change: opacity, transform; }
+  .reveal.in { opacity: 1; transform: none; }
+  /* slide from left (team column 1) */
+  .reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); }
+  .reveal-left.in { opacity: 1; transform: none; }
+  /* opacity-only (team builders col — must never leave a transform, matches React) */
+  .reveal-fade { opacity: 0; transition: opacity .6s var(--ease-out); }
+  .reveal-fade.in { opacity: 1; }
+  /* cta scale + fade-up */
+  .reveal-pop { opacity: 0; transform: translateY(22px) scale(0.96); transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); }
+  .reveal-pop.in { opacity: 1; transform: none; }
+
+  /* ===================== INTRO PRELOADER ===================== */
+  .hm-intro {
+    position: fixed; inset: 0; z-index: 1000; background: var(--panel);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px;
+    transition: transform .62s var(--ease-inout);
+    will-change: transform;
+  }
+  .hm-intro.lift { transform: translateY(-100%); }
+  .hm-intro.gone { display: none; }
+  .hm-intro-lockup { display: flex; align-items: center; gap: 14px; }
+  .hm-intro-mark {
+    width: 46px; height: 46px; border-radius: 13px; background: var(--violet);
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px -8px rgba(37,99,235,0.7);
+    transform: scale(0) rotate(-35deg); opacity: 0;
+  }
+  .hm-intro-mark.in { animation: markPop .6s cubic-bezier(0.34,1.56,0.64,1) .05s forwards; }
+  @keyframes markPop { to { transform: scale(1) rotate(0); opacity: 1; } }
+  .hm-intro-word { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-size: clamp(2rem, 5vw, 3rem); color: #fff; line-height: 1; opacity: 0; transform: translateY(14px); }
+  .hm-intro-word.in { animation: wordIn .5s var(--ease-out) .22s forwards; }
+  @keyframes wordIn { to { opacity: 1; transform: none; } }
+  .hm-intro-accent { color: var(--violet-lift); }
+  .hm-intro-bar { width: min(220px, 46vw); height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--violet), var(--violet-lift)); transform-origin: left center; transform: scaleX(0); }
+  .hm-intro-bar.in { animation: barGrow .85s var(--ease-out) .25s forwards; }
+  @keyframes barGrow { to { transform: scaleX(1); } }
+
+  /* ===================== REPLAY BUTTON ===================== */
+  .replay {
+    position: fixed; right: 18px; bottom: 18px; z-index: 1200;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 999px; border: none; cursor: pointer;
+    background: var(--violet); color: #fff; font-family: var(--font-body); font-weight: 600; font-size: 0.88rem;
+    box-shadow: 0 10px 26px -8px rgba(37,99,235,0.6);
+    transition: transform .18s ease, background .2s ease;
+  }
+  .replay:hover { transform: translateY(-2px); background: var(--violet-dark); }
+  .replay svg { width: 15px; height: 15px; }
+
+  .preview-note {
+    position: fixed; left: 18px; bottom: 18px; z-index: 1200;
+    font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint);
+    background: rgba(255,255,255,0.9); border: 1px solid var(--line);
+    padding: 7px 11px; border-radius: 8px; max-width: 340px; line-height: 1.4;
+  }
+
+  @media (max-width: 960px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .how-grid, .events-grid { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid, .footer-inner { grid-template-columns: 1fr; }
+  }
+
+  /* Respect reduced motion — no animation, everything visible. */
+  @media (prefers-reduced-motion: reduce) {
+    .navbar, .hero-item, .hero-right,
+    .reveal, .reveal-left, .reveal-fade, .reveal-pop {
+      opacity: 1 !important; transform: none !important; transition: none !important;
+    }
+    .hm-intro { display: none !important; }
+    .hm-intro-mark, .hm-intro-word, .hm-intro-bar { opacity: 1 !important; transform: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== INTRO PRELOADER ===== -->
+  <div class="hm-intro" id="intro" aria-hidden="true">
+    <div class="hm-intro-lockup">
+      <span class="hm-intro-mark" id="introMark">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+          <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="hm-intro-word" id="introWord">Hacka<span class="hm-intro-accent">Mate</span></span>
+    </div>
+    <span class="hm-intro-bar" id="introBar"></span>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="#top" class="navbar-logo">Hacka<span class="logo-accent">Mate</span></a>
+      <nav class="navbar-tabs-nav" aria-label="Main Navigation">
+        <a href="#top" class="navbar-tab-btn is-active"><span class="navbar-active-pill"></span><span class="navbar-tab-text">Home</span></a>
+        <a href="#" class="navbar-tab-btn"><span class="navbar-tab-text">Contact</span></a>
+        <a href="#teams" class="navbar-tab-btn"><span class="navbar-tab-text">Events</span></a>
+        <a href="#features" class="navbar-tab-btn"><span class="navbar-tab-text">Community</span></a>
+        <a href="#about" class="navbar-tab-btn"><span class="navbar-tab-text">About</span></a>
+      </nav>
+      <div class="navbar-actions">
+        <a href="#" class="navbar-login">Log in</a>
+        <a href="#" class="btn btn-primary navbar-cta">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="top">
+      <div class="container hero-inner">
+        <div class="hero-left">
+          <span class="eyebrow hero-item">Find · Build · Collaborate · Win</span>
+          <h1 class="hero-title hero-item">Your gateway to limitless hackathons.</h1>
+          <p class="hero-text hero-item">Connect with builders around the world, form a team backed by mentors, and ship real projects. One place for everything a hackathon needs.</p>
+          <div class="hero-buttons hero-item">
+            <a href="#hackathons" class="btn btn-primary">Explore hackathons</a>
+            <a href="#" class="btn btn-outline">Create account</a>
+          </div>
+          <div class="hero-social hero-item">
+            <div class="avatars">
+              <span class="avatar" style="background:#f97316"></span>
+              <span class="avatar" style="background:#22c55e"></span>
+              <span class="avatar" style="background:#38bdf8"></span>
+              <span class="avatar" style="background:#a855f7"></span>
+              <span class="avatar" style="background:#ec4899"></span>
+            </div>
+            <span class="hero-social-text">500+ hackers building right now</span>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="dashboard">
+            <div class="dashboard-head">
+              <h3>Welcome back, hacker</h3>
+              <p>Your personalized hackathon dashboard</p>
+            </div>
+            <input class="dashboard-search" type="text" placeholder="Search by tech, track, or location" />
+            <p class="dashboard-label">Active matches for you</p>
+            <ul class="match-list">
+              <li class="match"><span class="match-title">AI Innovation Hack</span><span class="match-meta">$15K prizes · 12 days left</span></li>
+              <li class="match"><span class="match-title">ETH Global Build</span><span class="match-meta">$50K prizes · 18 days left</span></li>
+              <li class="match"><span class="match-title">CyberForge Hack</span><span class="match-meta">$10K prizes · 5 days left</span></li>
+              <li class="match"><span class="match-title">CodeSprint Open</span><span class="match-meta">$5K prizes · 2 days left</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="how" id="how">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">How HackaMate works</span>
+          <h2 class="section-title">Everything you need, in one place</h2>
+          <p class="section-text">From finding the right challenge to assembling the right team, HackaMate keeps the whole journey connected.</p>
+        </div>
+        <div class="how-grid">
+          <div class="reveal" style="display:grid"><div class="how-card"><span class="how-num">01</span><h3 class="how-title">Discover</h3><p class="how-text">Find hackathons that match your interests, stack, and experience level.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="how-card"><span class="how-num">02</span><h3 class="how-title">Collaborate</h3><p class="how-text">Meet like-minded builders and form a team with a shared goal.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="how-card"><span class="how-num">03</span><h3 class="how-title">Build</h3><p class="how-text">Use starter templates, APIs, and resources to ship your idea fast.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="how-card"><span class="how-num">04</span><h3 class="how-title">Win</h3><p class="how-text">Submit your project, get judged, and take home the prizes.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY ===== -->
+    <section class="why" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Why HackaMate</span>
+          <h2 class="section-title">Hack smarter. Build better.</h2>
+          <p class="section-text">A workspace built to remove the friction builders hit at every step of a hackathon.</p>
+        </div>
+        <div class="why-grid">
+          <div class="reveal" style="display:grid"><div class="why-card"><div class="why-dot" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">◎</div><h3 class="why-title">Smart discovery</h3><p class="why-text">Recommendations tuned to your background and the tech you like to work with.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="why-card"><div class="why-dot" style="background:linear-gradient(135deg,#fb923c,#ea580c)">◈</div><h3 class="why-title">Mentor network</h3><p class="why-text">Get unstuck fast with mentors and office hours running through the event.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="why-card"><div class="why-dot" style="background:linear-gradient(135deg,#22c55e,#15803d)">◉</div><h3 class="why-title">Team finder</h3><p class="why-text">Filter and browse to find co-builders instead of hacking solo.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="why-card"><div class="why-dot" style="background:linear-gradient(135deg,#ec4899,#be185d)">◷</div><h3 class="why-title">Deadline tracker</h3><p class="why-text">Keep on top of checkpoints, submissions, and presentation calls.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="why-card"><div class="why-dot" style="background:linear-gradient(135deg,#38bdf8,#0369a1)">◆</div><h3 class="why-title">Curated resources</h3><p class="why-text">Reach sandbox credentials, mock APIs, and sponsor tools in one spot.</p></div></div>
+          <div class="reveal" style="display:grid"><div class="why-card"><div class="why-dot" style="background:linear-gradient(135deg,#a855f7,#6d28d9)">★</div><h3 class="why-title">Project showcase</h3><p class="why-text">Build a clean portfolio profile from the projects you have shipped.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TEAM ===== -->
+    <section class="team" id="teams">
+      <div class="container team-grid">
+        <div class="reveal-left">
+          <span class="eyebrow">For teams</span>
+          <h2 class="team-heading">Stop searching. Start building.</h2>
+          <p class="team-sub">Post the roles you need and let the right builders come to you.</p>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">AI Innovation Hackathon</span><span class="tag">Recruiting</span></div>
+            <p class="panel-meta">3 of 5 spots filled</p>
+            <div class="role-list">
+              <span class="role">Frontend</span><span class="role">Backend</span><span class="role">ML engineer</span><span class="role">Designer</span>
+            </div>
+            <div class="fake-toggle">Post your team</div>
+          </div>
+        </div>
+        <div class="reveal-fade">
+          <span class="eyebrow">For builders</span>
+          <h2 class="team-heading">Your idea needs a team.</h2>
+          <p class="team-sub">Browse builders by skill and click to see their full profile and connect.</p>
+          <div class="landing-builder-grid">
+            <div class="builder-card" style="background:linear-gradient(135deg,#3b82f6,#1e3a8a)"><div class="builder-info"><div class="builder-sub">Full-stack developer · React · Node · Postgres</div><div class="builder-name">Aria Menon</div></div></div>
+            <div class="builder-card" style="background:linear-gradient(135deg,#a855f7,#6d28d9)"><div class="builder-info"><div class="builder-sub">UI/UX designer · Figma · Prototyping</div><div class="builder-name">Diego Alvarez</div></div></div>
+            <div class="builder-card" style="background:linear-gradient(135deg,#22c55e,#15803d)"><div class="builder-info"><div class="builder-sub">ML engineer · Python · PyTorch</div><div class="builder-name">Sara Okafor</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== EVENTS ===== -->
+    <section class="events" id="hackathons">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Live now</span>
+          <h2 class="section-title">Find your next challenge</h2>
+          <p class="section-text">Browse open hackathons across the tech you care about.</p>
+        </div>
+        <div class="filters reveal">
+          <button class="filter filter-active">All</button>
+          <button class="filter">AI / ML</button>
+          <button class="filter">Web3</button>
+          <button class="filter">Mobile</button>
+          <button class="filter">FinTech</button>
+          <button class="filter">Open source</button>
+        </div>
+        <div class="events-grid">
+          <div class="reveal" style="display:grid"><div class="event-card"><span class="event-tag">AI / ML</span><h3 class="event-title">AI Innovation Hack</h3><div class="event-meta"><span class="event-prize">$15K prizes</span><span class="event-days">12 days left</span></div><div class="event-tech"><span class="chip">Python</span><span class="chip">LLMs</span><span class="chip">APIs</span></div><a href="#" class="btn btn-outline event-btn">Explore</a></div></div>
+          <div class="reveal" style="display:grid"><div class="event-card"><span class="event-tag">Web3</span><h3 class="event-title">ETH Global Build</h3><div class="event-meta"><span class="event-prize">$50K prizes</span><span class="event-days">18 days left</span></div><div class="event-tech"><span class="chip">Solidity</span><span class="chip">Web3</span><span class="chip">React</span></div><a href="#" class="btn btn-outline event-btn">Explore</a></div></div>
+          <div class="reveal" style="display:grid"><div class="event-card"><span class="event-tag">Open source</span><h3 class="event-title">CodeSprint Open</h3><div class="event-meta"><span class="event-prize">$5K prizes</span><span class="event-days">2 days left</span></div><div class="event-tech"><span class="chip">Go</span><span class="chip">Rust</span><span class="chip">CLI</span></div><a href="#" class="btn btn-outline event-btn">Explore</a></div></div>
+          <div class="reveal" style="display:grid"><div class="event-card"><span class="event-tag">Security</span><h3 class="event-title">CyberForge Hack</h3><div class="event-meta"><span class="event-prize">$10K prizes</span><span class="event-days">5 days left</span></div><div class="event-tech"><span class="chip">Security</span><span class="chip">Networking</span></div><a href="#" class="btn btn-outline event-btn">Explore</a></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta">
+      <div class="container">
+        <div class="cta-inner reveal-pop">
+          <h2 class="cta-title">Build something crazy.</h2>
+          <p class="cta-text">Find your hackathon, form your team, and ship your idea. Win together.</p>
+          <a href="#" class="btn cta-btn">Get started</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="about">
+    <div class="container footer-inner reveal">
+      <div class="footer-brand">
+        <span class="footer-logo">Hacka<span class="logo-accent">Mate</span></span>
+        <p class="footer-tagline">Find, build, collaborate, and win. The platform for hackathon builders.</p>
+        <div class="footer-socials">
+          <a class="footer-social-btn" href="#" aria-label="Instagram">IG</a>
+          <a class="footer-social-btn" href="#" aria-label="LinkedIn">in</a>
+          <a class="footer-social-btn" href="#" aria-label="WhatsApp">WA</a>
+        </div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col"><span class="footer-col-title">Product</span><a href="#">Hackathons</a><a href="#">Team finder</a><a href="#">Events</a><a href="#">Resources</a></div>
+        <div class="footer-col"><span class="footer-col-title">Resources</span><a href="#">Learning hub</a><a href="#">Community</a><a href="#">Blog</a><a href="#">Support</a></div>
+        <div class="footer-col"><span class="footer-col-title">Company</span><a href="#">About</a><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+      </div>
+    </div>
+    <div class="container footer-bottom reveal">
+      <div class="footer-bottom-socials">
+        <a class="footer-social-link" href="#">Instagram</a>
+        <a class="footer-social-link" href="#">LinkedIn</a>
+        <a class="footer-social-link" href="#">WhatsApp</a>
+      </div>
+    </div>
+  </footer>
+
+  <button class="replay" id="replay" type="button" aria-label="Replay animation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    Replay
+  </button>
+
+  <div class="preview-note">Preview of the landing animations added to your React app — theme &amp; content unchanged, motion only. Scroll to see section reveals.</div>
+
+<script>
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var intro = document.getElementById('intro');
+  var introMark = document.getElementById('introMark');
+  var introWord = document.getElementById('introWord');
+  var introBar = document.getElementById('introBar');
+
+  var io = null;
+
+  function armScrollReveals() {
+    var items = document.querySelectorAll('.reveal, .reveal-left, .reveal-fade, .reveal-pop');
+    if (reduceMotion) {
+      items.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    if (io) io.disconnect();
+    io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          // stagger cards that sit inside the same grid
+          var grid = el.parentElement;
+          var delay = 0;
+          if (grid && (grid.classList.contains('how-grid') || grid.classList.contains('events-grid'))) {
+            delay = Array.prototype.indexOf.call(grid.children, el) * 90;
+          } else if (grid && grid.classList.contains('why-grid')) {
+            delay = (Array.prototype.indexOf.call(grid.children, el) % 3) * 90;
+          }
+          el.style.transitionDelay = (delay / 1000) + 's';
+          el.classList.add('in');
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  }
+
+  function resetReveals() {
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-fade, .reveal-pop').forEach(function (el) {
+      el.classList.remove('in');
+      el.style.transitionDelay = '';
+    });
+  }
+
+  function playIntro() {
+    document.body.classList.remove('entered');
+
+    if (reduceMotion) {
+      intro.classList.add('gone');
+      document.body.classList.add('entered');
+      armScrollReveals();
+      return;
+    }
+
+    // reset intro visuals
+    intro.classList.remove('lift', 'gone');
+    [introMark, introWord, introBar].forEach(function (el) { el.classList.remove('in'); });
+    // force reflow so re-adding the animation classes restarts them
+    void intro.offsetWidth;
+    introMark.classList.add('in');
+    introWord.classList.add('in');
+    introBar.classList.add('in');
+
+    // hold on the logo, then wipe up
+    window.setTimeout(function () { intro.classList.add('lift'); }, 1050);
+  }
+
+  // when the intro finishes lifting, hide it and trigger the page entrance
+  intro.addEventListener('transitionend', function (e) {
+    if (e.propertyName === 'transform' && intro.classList.contains('lift')) {
+      intro.classList.add('gone');
+      document.body.classList.add('entered');
+    }
+  });
+
+  document.getElementById('replay').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    resetReveals();
+    // re-arm observers on the next frame so re-hidden items can re-trigger
+    window.requestAnimationFrame(function () {
+      armScrollReveals();
+      playIntro();
+    });
+  });
+
+  // initial run
+  armScrollReveals();
+  playIntro();
+</script>
+</body>
+</html>

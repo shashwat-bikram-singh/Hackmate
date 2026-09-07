@@ -1,0 +1,19 @@
+/* Reveal — layout-neutral helpers for the scroll-entrance primitive.
+
+   .reveal-cell lets a <Reveal> wrap a grid card WITHOUT changing the grid:
+   as a grid container with a single stretched child, the wrapped card keeps
+   the full column width AND equal row height it had as a direct grid item,
+   while the card's own :hover transform stays free of motion's inline transform. */
+.reveal-cell {
+  display: grid;
+  min-width: 0;
+}
+
+/* Belt-and-braces: if a user prefers reduced motion, ensure nothing is left
+   hidden by an interrupted inline style. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-cell {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

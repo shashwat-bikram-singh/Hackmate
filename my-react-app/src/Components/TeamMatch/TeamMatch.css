@@ -1,8 +1,15 @@
-.team { padding: 84px 0; background: var(--bg-alt); }
+.team {
+  padding: 96px 0;
+  background: rgba(248, 250, 252, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+}
 .team-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 44px;
+  gap: 48px;
 }
 .team-heading {
   margin-top: 12px;
@@ -45,39 +52,25 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--live);
-  box-shadow: 0 0 0 2px rgba(22, 194, 101, 0.2);
+  background: var(--live, #16c265);
+  box-shadow: 0 0 0 rgba(22, 194, 101, 0.4);
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  animation: live-blink 1.8s infinite;
 }
 
-/* Blinking effect when in contact with "Recruiting" */
+/* Hover effect on "Recruiting" */
 .tag:hover {
   background: rgba(22, 194, 101, 0.2);
   border-color: rgba(22, 194, 101, 0.5);
   color: #0b7c3e;
   transform: translateY(-1px) scale(1.04);
   box-shadow: 0 4px 14px rgba(22, 194, 101, 0.25);
-  animation: tag-beacon-pulse 0.75s ease-in-out infinite;
-}
-
-.tag:hover::before {
-  animation: live-blink 0.75s ease-in-out infinite;
 }
 
 @keyframes live-blink {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1.25);
-    background: #16c265;
-    box-shadow: 0 0 0 0 rgba(22, 194, 101, 0.75), 0 0 10px rgba(22, 194, 101, 0.9);
-  }
-  50% {
-    opacity: 0.2;
-    transform: scale(0.75);
-    background: #0f9a4f;
-    box-shadow: 0 0 0 7px rgba(22, 194, 101, 0), 0 0 2px rgba(22, 194, 101, 0.2);
-  }
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 194, 101, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 194, 101, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 194, 101, 0); }
 }
 
 @keyframes tag-beacon-pulse {
@@ -119,7 +112,7 @@
 
 .team-col-builders .team-sub {
   text-align: left;
-  max-width: 460px;
+  max-width: 540px;
 }
 
 .landing-builder-grid {

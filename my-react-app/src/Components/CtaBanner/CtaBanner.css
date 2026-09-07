@@ -1,11 +1,24 @@
-.cta { padding: 84px 0; }
+.cta { padding: 96px 0; }
 .cta-inner {
   background: var(--panel);
-  border-radius: 20px;
-  padding: 60px 32px;
+  border-radius: 24px;
+  padding: 72px 48px;
   text-align: center;
+  box-shadow: 0 24px 60px -20px rgba(16, 18, 25, 0.35);
 }
-.cta-title { color: #fff; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.025em; }
-.cta-text { margin-top: 14px; color: #b7bccb; max-width: 460px; margin-left: auto; margin-right: auto; }
-.cta-btn { margin-top: 26px; background: #fff; color: var(--panel); }
+.cta-title {
+  color: #fff;
+  font-size: clamp(2.2rem, 3vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.cta-text {
+  margin-top: 16px;
+  color: #b7bccb;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.06rem;
+}
+.cta-btn { margin-top: 28px; background: #fff; color: var(--panel); }
 .cta-btn:hover { background: var(--violet-soft); }

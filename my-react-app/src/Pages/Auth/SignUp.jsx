@@ -125,6 +125,11 @@ export default function SignUp() {
   const [dropped, setDropped] = useState(false);
   const [assembled, setAssembled] = useState(false);
   const [dotsClose, setDotsClose] = useState(false);
+  // Which password-type field is focused ("password" | "confirm" | null).
+  // Confirm Password is always masked, so only the main password can "peek".
+  const [focusedField, setFocusedField] = useState(null);
+
+  const peek = focusedField === "password" && showPw;
 
   // Validation logic
   const isEmailValid = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
@@ -271,6 +276,7 @@ export default function SignUp() {
               formStatus={formStatus}
               dropped={dropped}
               assembled={assembled}
+              peek={peek}
             />
           </div>
 
@@ -309,7 +315,10 @@ export default function SignUp() {
                         setName(e.target.value);
                         if (nameTouched) setNameTouched(true);
                       }}
-                      onFocus={() => setEyeState("watching")}
+                      onFocus={() => {
+                        setEyeState("watching");
+                        setFocusedField(null);
+                      }}
                       onBlur={() => {
                         setNameTouched(true);
                         setEyeState("idle");
@@ -339,7 +348,10 @@ export default function SignUp() {
                         setEmail(e.target.value);
                         if (emailTouched) setEmailTouched(true);
                       }}
-                      onFocus={() => setEyeState("watching")}
+                      onFocus={() => {
+                        setEyeState("watching");
+                        setFocusedField(null);
+                      }}
                       onBlur={() => {
                         setEmailTouched(true);
                         setEyeState("idle");
@@ -370,10 +382,14 @@ export default function SignUp() {
                           setPassword(e.target.value);
                           if (passwordTouched) setPasswordTouched(true);
                         }}
-                        onFocus={() => setEyeState("shy")}
+                        onFocus={() => {
+                          setEyeState("shy");
+                          setFocusedField("password");
+                        }}
                         onBlur={() => {
                           setPasswordTouched(true);
                           setEyeState("idle");
+                          setFocusedField(null);
                         }}
                         style={{ paddingRight: 32 }}
                         placeholder="••••••••••••"
@@ -383,6 +399,7 @@ export default function SignUp() {
                       <button
                         type="button"
                         className="anim-eye-btn"
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => setShowPw((v) => !v)}
                         aria-label={showPw ? "Hide password" : "Show password"}
                       >
@@ -410,10 +427,14 @@ export default function SignUp() {
                         setConfirmPw(e.target.value);
                         if (confirmTouched) setConfirmTouched(true);
                       }}
-                      onFocus={() => setEyeState("shy")}
+                      onFocus={() => {
+                        setEyeState("shy");
+                        setFocusedField("confirm");
+                      }}
                       onBlur={() => {
                         setConfirmTouched(true);
                         setEyeState("idle");
+                        setFocusedField(null);
                       }}
                       placeholder="••••••••••••"
                       required

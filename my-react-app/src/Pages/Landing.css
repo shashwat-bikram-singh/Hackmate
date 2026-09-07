@@ -1,0 +1,66 @@
+/* ============================================================
+   HackaMate — Full-Width Landing Page Layout & Grid Background
+   ============================================================ */
+
+.landing-layout {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Ambient dynamic radial lights across the entire landing page */
+.landing-layout::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 65% 50% at 82% 20%, rgba(219, 234, 254, 0.65) 0%, rgba(239, 246, 255, 0.3) 45%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 14% 15%, rgba(239, 246, 255, 0.75) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 65%, rgba(219, 234, 254, 0.45) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 10% 85%, rgba(224, 231, 255, 0.4) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-layout > * {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-main {
+  width: 100%;
+}
+
+/* Floating Replay Animation Trigger */
+.hm-replay-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 99;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--panel, #101219);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -6px rgba(16, 18, 25, 0.4), 0 0 0 1px rgba(37, 99, 235, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hm-replay-btn:hover {
+  transform: translateY(-2px);
+  background: var(--violet, #2563eb);
+  box-shadow: 0 12px 30px -6px rgba(37, 99, 235, 0.65);
+}
+
+.hm-replay-btn svg {
+  display: block;
+}

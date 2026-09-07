@@ -1,5 +1,6 @@
 import React from 'react';
 import './WhyHackaMate.css';
+import Reveal from '../Reveal/Reveal.jsx';
 
 const features = [
   {
@@ -88,26 +89,28 @@ function WhyHackaMate() {
   return (
     <section className="why" id="features">
       <div className="container">
-        <div className="section-head">
+        <Reveal className="section-head">
           <span className="eyebrow">Why HackaMate</span>
           <h2 className="section-title">Hack smarter. Build better.</h2>
           <p className="section-text">
             A workspace built to remove the friction builders hit at every step of a hackathon.
           </p>
-        </div>
+        </Reveal>
         <div className="why-grid">
-          {features.map((f) => (
-            <div className="why-card" key={f.title}>
-              <div
-                className="why-dot"
-                style={{ background: f.gradient || f.color }}
-                aria-label={f.title}
-              >
-                {f.icon}
+          {features.map((f, i) => (
+            <Reveal className="reveal-cell" delay={(i % 3) * 0.09} key={f.title}>
+              <div className="why-card">
+                <div
+                  className="why-dot"
+                  style={{ background: f.gradient || f.color }}
+                  aria-label={f.title}
+                >
+                  {f.icon}
+                </div>
+                <h3 className="why-title">{f.title}</h3>
+                <p className="why-text">{f.text}</p>
               </div>
-              <h3 className="why-title">{f.title}</h3>
-              <p className="why-text">{f.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

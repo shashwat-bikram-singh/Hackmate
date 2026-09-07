@@ -1,6 +1,8 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import './TeamMatch.css';
 import ExpandableProfileCard from '../ProfileCard/ExpandableProfileCard.jsx';
+import Reveal from '../Reveal/Reveal.jsx';
 
 import SaveToggle from '../AuthToggle/SaveToggle.jsx';
 
@@ -40,11 +42,13 @@ const members = [
 ];
 
 function TeamMatch() {
+  const reduce = useReducedMotion();
+
   return (
     <section className="team" id="teams">
       <div className="container team-grid">
-        {/* Column 1: For teams */}
-        <div className="team-col">
+        {/* Column 1: For teams — slides in from the left */}
+        <Reveal as="div" className="team-col" x={-28} y={0}>
           <span className="eyebrow">For teams</span>
           <h2 className="team-heading">Stop searching. Start building.</h2>
           <p className="team-sub">Post the roles you need and let the right builders come to you.</p>
@@ -73,10 +77,20 @@ function TeamMatch() {
               />
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        {/* Column 2: For builders with Expandable Profile Cards */}
-        <div className="team-col team-col-builders">
+        {/* Column 2: For builders — opacity-only reveal.
+            NOTE: ExpandableProfileCard opens a position:fixed modal via a shared
+            layoutId. A residual transform on this ancestor would re-anchor that
+            fixed overlay and break the modal, so we animate opacity ONLY here
+            (no x/y/scale => motion never writes a transform). */}
+        <motion.div
+          className="team-col team-col-builders"
+          initial={reduce ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        >
           <span className="eyebrow">For builders</span>
           <h2 className="team-heading">Your idea needs a team.</h2>
           <p className="team-sub">Browse builders by skill and click to see their full profile and connect.</p>
@@ -114,7 +128,7 @@ function TeamMatch() {
               />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

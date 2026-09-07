@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, LayoutGroup } from 'motion/react';
+import { motion, LayoutGroup, useReducedMotion } from 'motion/react';
 import './Navbar.css';
 
 const navTabs = [
@@ -18,7 +18,12 @@ function getActiveTabFromHash(hash) {
   return 'home';
 }
 
-function Navbar() {
+// `entered` gates the drop-in entrance. Defaults to true so routes that mount
+// the navbar directly (about / contact) still animate it in on mount; the
+// landing page passes the flag it toggles as the intro overlay lifts.
+function Navbar({ entered = true }) {
+  const reduce = useReducedMotion();
+
   const [active, setActive] = useState(() => {
     return typeof window !== 'undefined'
       ? getActiveTabFromHash(window.location.hash)
@@ -40,7 +45,14 @@ function Navbar() {
   };
 
   return (
-    <header className="navbar">
+    <motion.header
+      className="navbar"
+      // Subtle drop-in from just above. Kept off the inner LayoutGroup so the
+      // sliding active-pill (layoutId) is never measured mid-transform.
+      initial={reduce ? false : { y: -18, opacity: 0 }}
+      animate={entered ? { y: 0, opacity: 1 } : { y: -18, opacity: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="container navbar-inner">
         <a href="#/" className="logo navbar-logo">
           Hacka<span className="logo-accent">Mate</span>
@@ -91,7 +103,7 @@ function Navbar() {
           <a href="#/signup" className="btn btn-primary navbar-cta">Get started</a>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
 

@@ -1,8 +1,8 @@
-.why { padding: 84px 0; }
+.why { padding: 96px 0; }
 .why-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 28px;
 }
 .why-card {
   position: relative;

@@ -19,7 +19,7 @@
 .anim-loader {
   position: fixed;
   inset: 0;
-  background: var(--violet, #2563eb);
+  background: #540ade;
   display: flex;
   align-items: center;
   justify-content: center;

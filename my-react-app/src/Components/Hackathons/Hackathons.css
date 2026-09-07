@@ -1,4 +1,4 @@
-.events { padding: 84px 0; }
+.events { padding: 96px 0; }
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -22,7 +22,7 @@
 .events-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 24px;
 }
 .event-card {
   position: relative;

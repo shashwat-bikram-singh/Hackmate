@@ -266,6 +266,7 @@ export default function SignIn() {
               formStatus={formStatus}
               dropped={dropped}
               assembled={assembled}
+              peek={showPw}
             />
           </div>
 
@@ -348,6 +349,7 @@ export default function SignIn() {
                       <button
                         type="button"
                         className="anim-eye-btn"
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => setShowPw((v) => !v)}
                         aria-label={showPw ? "Hide password" : "Show password"}
                       >

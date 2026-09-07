@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HackaMate — Login Animation</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #14161d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: 24px;
+  }
+
+  /* ───────────── LOADER ───────────── */
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: #540ade;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    transition: opacity .5s ease;
+  }
+  #loader.gone { opacity: 0; pointer-events: none; }
+  .loader-dots { display: flex; gap: 20px; filter: url(#goo); }
+  .dot {
+    width: 18px; height: 18px; border-radius: 50%; background: #fff;
+    animation: pulse .85s ease-in-out infinite;
+  }
+  .dot:nth-child(2) { animation-delay: .12s; }
+  .loader-dots.close .dot:nth-child(1) { transform: translateX(10px); }
+  .loader-dots.close .dot:nth-child(2) { transform: translateX(-10px); }
+  .dot { transition: transform .45s ease; }
+  @keyframes pulse { 0%,100%{ scale:.85 } 50%{ scale:1.2 } }
+
+  /* ───────────── SKIP ───────────── */
+  #skip {
+    position: fixed; top: 24px; right: 24px; z-index: 80;
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+    color: #fff; padding: 8px 16px; border-radius: 999px; cursor: pointer;
+    font-size: .8rem; font-weight: 600; letter-spacing: .02em;
+    transition: background .2s ease, transform .2s ease, color .2s ease, border-color .2s ease;
+  }
+  #skip:hover { background: rgba(255,255,255,.28); transform: translateY(-1px); }
+  #skip.dark { background: #f1f2f6; border-color: #e2e5ec; color: #14161d; }
+
+  /* ───────────── CARD ───────────── */
+  #card {
+    display: flex; width: 100%; max-width: 880px; min-height: 560px;
+    border-radius: 28px; overflow: hidden; position: relative; background: #fff;
+    box-shadow: 0 32px 80px -12px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.15);
+    opacity: 0; transform: scale(.92);
+    transition: opacity .5s ease, transform .6s cubic-bezier(.22,1,.36,1);
+  }
+  #card.show { opacity: 1; transform: scale(1); }
+
+  .left {
+    width: 46%; background: #e8e8e8; position: relative;
+    display: flex; align-items: flex-end; justify-content: center;
+    overflow: hidden; min-height: 560px;
+  }
+  .right {
+    width: 54%; background: #fff; display: flex; align-items: center;
+    justify-content: center; padding: 48px;
+  }
+
+  /* ───────────── MASCOT STAGE ───────────── */
+  .stage { position: relative; width: 300px; height: 300px; }
+  .char {
+    position: absolute; bottom: 0; opacity: 0;
+    transform: translateY(-380px) rotate(var(--rot,0deg));
+    transition: transform 1s cubic-bezier(.2,1.1,.3,1), opacity .5s ease;
+  }
+  .char.dropped { opacity: 1; transform: translateY(0) rotate(0deg); }
+  .char.settled { transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .char.settled.bob { animation: bob var(--bobdur,2.6s) ease-in-out var(--bobdelay,0s) infinite; }
+  @keyframes bob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-5px) } }
+
+  /* Ink color for faces */
+  .ink { background: #14161d; }
+
+  /* VIOLET — hinged pillar (bends at the neck on password) */
+  .violet { left: 44px; width: 92px; height: 236px; z-index: 1; }
+  .violet .v-lower {
+    position: absolute; bottom: 0; left: 0; width: 92px; height: 150px;
+    background: #6312f6; border-radius: 0 0 4px 4px;
+  }
+  .violet .v-upper {
+    position: absolute; bottom: 150px; left: 0; width: 92px; height: 86px;
+    background: #6312f6; border-radius: 5px 5px 0 0;
+    transform-origin: 50% 100%;
+    transition: transform .45s cubic-bezier(.34,1.4,.5,1);
+  }
+  .violet .v-face {
+    position: absolute; top: 26px; left: 0; width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .violet .v-eyes { display: flex; gap: 30px; position: relative; }
+  .violet .v-bar {
+    position: absolute; left: 50%; top: 3px; transform: translateX(-50%);
+    width: 6px; height: 26px; border-radius: 3px; background: #14161d;
+    transition: opacity .2s ease;
+  }
+  .violet .v-frown {
+    position: absolute; left: 50%; top: 8px; transform: translateX(-50%) scale(.5);
+    width: 20px; height: 11px; border: 3px solid #14161d; border-bottom: none;
+    border-radius: 12px 12px 0 0; opacity: 0; transition: all .25s ease;
+  }
+  /* shock: neck bends left, bar hides, frown shows, jitter */
+  .stage.shy .violet .v-upper { transform: rotate(-26deg) translateX(-6px); }
+  .stage.shy .violet .v-bar { opacity: 0; }
+  .stage.shy .violet .v-frown { opacity: 1; transform: translateX(-50%) scale(1); }
+  .stage.watching .violet .v-upper { transform: rotate(7deg); }
+  .stage.shy .violet { animation: jitter .14s linear infinite; }
+
+  /* CHARCOAL — rectangle, ducks down on password */
+  .charcoal { left: 132px; width: 72px; height: 168px; z-index: 2; }
+  .charcoal .c-body { width: 100%; height: 100%; background: #1b1c21; border-radius: 4px; }
+  .charcoal .c-face {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px;
+  }
+  .charcoal-wrap { transform-origin: 50% 100%; transition: transform .4s cubic-bezier(.34,1.5,.6,1); }
+  .stage.shy .charcoal .charcoal-wrap { transform: translateY(26px) scaleY(.72); }
+
+  /* YELLOW — pill with beak, tilts away on password */
+  .yellow { left: 176px; width: 88px; height: 128px; z-index: 3;
+            transform-origin: 50% 100%; }
+  .yellow .y-body { width: 100%; height: 100%; background: #e1d312; border-radius: 44px 44px 0 0; }
+  .yellow .y-eye {
+    position: absolute; top: 34px; right: 26px; width: 9px; height: 9px;
+    border-radius: 50%; background: #14161d;
+  }
+  .yellow .y-beak {
+    position: absolute; right: -12px; top: 52px; width: 34px; height: 6px;
+    border-radius: 3px; background: #14161d; transform-origin: left center;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .stage.shy .yellow { transform: rotate(12deg) translateX(8px); }
+  .stage.shy .yellow .y-beak { transform: rotate(22deg); }
+
+  /* ORANGE — dome, squashes + frowns on password */
+  .orange { left: 0; width: 176px; height: 104px; z-index: 4;
+            transform-origin: 50% 100%; transition: transform .35s cubic-bezier(.34,1.5,.6,1); }
+  .orange .o-body { width: 100%; height: 100%; background: #f27b37; border-radius: 96px 96px 0 0; }
+  .orange .o-face {
+    position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .orange .o-eyes { display: flex; gap: 42px; }
+  .orange .o-eye { width: 11px; height: 11px; border-radius: 50%; background: #14161d; }
+  .orange .o-mouth {
+    margin-top: 6px; width: 26px; height: 13px; background: #14161d;
+    border-radius: 0 0 14px 14px; transition: all .25s ease;
+  }
+  .stage.shy .orange { transform: scaleX(1.08) scaleY(.9); }
+  .stage.shy .orange .o-mouth {
+    height: 9px; width: 22px; background: transparent;
+    border: 3px solid #14161d; border-bottom: none; border-radius: 14px 14px 0 0;
+  }
+  /* orange wink */
+  .orange .o-eye.wink { height: 3px; border-radius: 3px; }
+
+  /* pupils / eyes shared */
+  .eye {
+    width: 15px; height: 15px; background: #fff; border-radius: 50%;
+    position: relative; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.12);
+  }
+  .pupil {
+    width: 7px; height: 7px; background: #14161d; border-radius: 50%;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .stage.shy .eye .pupil { animation: none; }
+  .stage.shy .charcoal .eye { }
+  @keyframes jitter {
+    0%{ transform: translate(0,0) } 25%{ transform: translate(-1.5px,1px) }
+    50%{ transform: translate(1.5px,-1px) } 75%{ transform: translate(-1px,-1px) }
+    100%{ transform: translate(0,0) }
+  }
+
+  /* ───────────── FORM ───────────── */
+  .form-inner { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .sparkle { margin-bottom: 24px; }
+  h1 { font-size: 1.85rem; font-weight: 700; color: #14161d; letter-spacing: -.025em; margin-bottom: 6px; }
+  .sub { font-size: .88rem; color: #64748b; margin-bottom: 28px; }
+  form { width: 100%; text-align: left; }
+  .field { margin-bottom: 20px; position: relative; }
+  label.lbl { display: block; font-size: .72rem; font-weight: 600; color: #64748b; margin-bottom: 4px; }
+  .inp {
+    width: 100%; border: none; border-bottom: 1.5px solid #e2e8f0; padding: 8px 0;
+    font-size: .98rem; background: transparent; outline: none; color: #14161d;
+    transition: border-color .2s ease; font-family: inherit;
+  }
+  .inp:focus { border-bottom-color: #6312f6; }
+  .inp::placeholder { color: #94a3b8; }
+  .pw-wrap { position: relative; }
+  .eye-btn { position: absolute; right: 0; top: 4px; background: none; border: none; cursor: pointer; color: #94a3b8; }
+  .row { display: flex; align-items: center; justify-content: space-between; font-size: .78rem; color: #475569; margin-bottom: 22px; }
+  .row a { color: #6312f6; text-decoration: none; font-weight: 600; }
+  .row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .btn {
+    width: 100%; padding: 13px; border: none; border-radius: 999px; cursor: pointer;
+    background: #14161d; color: #fff; font-size: .95rem; font-weight: 600;
+    transition: transform .12s ease, background .2s ease; margin-bottom: 12px; font-family: inherit;
+  }
+  .btn:hover { background: #000; }
+  .btn:active { transform: scale(.98); }
+  .btn.google { background: #f1f2f6; color: #14161d; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .btn.google:hover { background: #e8eaf0; }
+  .foot { text-align: center; font-size: .82rem; color: #64748b; margin-top: 16px; }
+  .foot a { color: #6312f6; font-weight: 600; text-decoration: none; }
+
+  .fade { opacity: 0; transform: translateY(18px); }
+  .card.revealed .fade { animation: fadeUp .45s cubic-bezier(.22,1,.36,1) forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .char, .dot, .stage.shy .violet { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+  <!-- gooey filter for loader dots -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/>
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9" result="goo"/>
+        <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <div id="loader">
+    <div class="loader-dots" id="dots"><div class="dot"></div><div class="dot"></div></div>
+  </div>
+
+  <button id="skip">Skip &rarr;</button>
+
+  <div id="card" class="card">
+    <!-- LEFT: mascots -->
+    <div class="left">
+      <div class="stage" id="stage">
+        <!-- VIOLET -->
+        <div class="char violet" id="violet" style="--rot:-8deg;--bobdur:2.6s;--bobdelay:0s">
+          <div class="v-lower"></div>
+          <div class="v-upper">
+            <div class="v-face">
+              <div class="v-eyes">
+                <div class="eye"><div class="pupil"></div></div>
+                <div class="eye"><div class="pupil"></div></div>
+              </div>
+              <div class="v-bar"></div>
+              <div class="v-frown"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHARCOAL -->
+        <div class="char charcoal" id="charcoal" style="--rot:6deg;--bobdur:2.5s;--bobdelay:.4s">
+          <div class="charcoal-wrap">
+            <div class="c-body"></div>
+            <div class="c-face">
+              <div class="eye"><div class="pupil"></div></div>
+              <div class="eye"><div class="pupil"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YELLOW -->
+        <div class="char yellow" id="yellow" style="--rot:10deg;--bobdur:2.7s;--bobdelay:1.2s">
+          <div class="y-body"></div>
+          <div class="y-eye" id="yeye"></div>
+          <div class="y-beak"></div>
+        </div>
+
+        <!-- ORANGE -->
+        <div class="char orange" id="orange" style="--rot:-12deg;--bobdur:2.4s;--bobdelay:.8s">
+          <div class="o-body"></div>
+          <div class="o-face">
+            <div class="o-eyes"><div class="o-eye" id="oeyeL"></div><div class="o-eye" id="oeyeR"></div></div>
+            <div class="o-mouth"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: form -->
+    <div class="right">
+      <div class="form-inner">
+        <div class="sparkle fade" style="animation-delay:0s">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#14161d">
+            <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z"/>
+          </svg>
+        </div>
+        <h1 class="fade" style="animation-delay:.06s">Welcome back!</h1>
+        <p class="sub fade" style="animation-delay:.12s">Please enter your details</p>
+        <form onsubmit="return false">
+          <div class="field fade" style="animation-delay:.18s">
+            <label class="lbl">Email</label>
+            <input class="inp" id="email" type="email" placeholder="anna@gmail.com" autocomplete="email"/>
+          </div>
+          <div class="field fade" style="animation-delay:.24s">
+            <label class="lbl">Password</label>
+            <div class="pw-wrap">
+              <input class="inp" id="password" type="password" placeholder="••••••••••••" style="padding-right:32px" autocomplete="current-password"/>
+              <button type="button" class="eye-btn" id="eyeBtn" aria-label="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="row fade" style="animation-delay:.3s">
+            <label><input type="checkbox" checked/> Remember for 30 days</label>
+            <a href="#">Forgot password?</a>
+          </div>
+          <button class="btn fade" id="loginBtn" style="animation-delay:.36s">Log in</button>
+          <button class="btn google fade" type="button" style="animation-delay:.42s">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+            Log in with Google
+          </button>
+          <p class="foot fade" style="animation-delay:.48s">Don't have an account? <a href="#">Sign Up</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  var loader = document.getElementById('loader');
+  var dots = document.getElementById('dots');
+  var card = document.getElementById('card');
+  var stage = document.getElementById('stage');
+  var skip = document.getElementById('skip');
+  var chars = ['violet','charcoal','orange','yellow'].map(function(id){ return document.getElementById(id); });
+  var timers = [];
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+  function drop(){ chars.forEach(function(c){ c.classList.add('dropped'); }); }
+  function settle(){ chars.forEach(function(c){ c.classList.add('settled','bob'); }); }
+
+  function runIntro(){
+    later(function(){ dots.classList.add('close'); }, 1300);
+    later(function(){
+      loader.classList.add('gone');
+      card.classList.add('show','revealed');
+      skip.classList.add('dark');
+    }, 1900);
+    later(drop, 2500);
+    later(settle, 3800);
+    later(function(){ skip.style.display='none'; }, 3900);
+  }
+
+  skip.addEventListener('click', function(){
+    clearAll();
+    loader.classList.add('gone');
+    card.classList.add('show','revealed');
+    drop();
+    chars.forEach(function(c){
+      c.style.transition='none';
+      c.classList.add('dropped','settled');
+      void c.offsetWidth;
+      c.style.transition='';
+      c.classList.add('bob');
+    });
+    skip.style.display='none';
+  });
+
+  runIntro();
+
+  // ── Cursor-tracking googly eyes ──
+  var mouse = { x: -9999, y: -9999 };
+  window.addEventListener('mousemove', function(e){ mouse.x = e.clientX; mouse.y = e.clientY; }, { passive:true });
+
+  var pupils = Array.prototype.slice.call(document.querySelectorAll('.pupil'));
+  var dotEyes = [document.getElementById('yeye'), document.getElementById('oeyeL'), document.getElementById('oeyeR')];
+
+  function tick(){
+    var shy = stage.classList.contains('shy');
+    if (mouse.x > -1000 && !shy) {
+      pupils.forEach(function(p){
+        var r = p.parentElement.getBoundingClientRect();
+        var cx = r.left + r.width/2, cy = r.top + r.height/2;
+        var a = Math.atan2(mouse.y - cy, mouse.x - cx);
+        var d = Math.min(Math.hypot(mouse.x-cx, mouse.y-cy) * 0.01, 3.5);
+        p.style.transform = 'translate(calc(-50% + '+(Math.cos(a)*d).toFixed(1)+'px), calc(-50% + '+(Math.sin(a)*d).toFixed(1)+'px))';
+      });
+      dotEyes.forEach(function(dt){
+        if(!dt) return;
+        var r = dt.getBoundingClientRect();
+        var cx = r.left + r.width/2, cy = r.top + r.height/2;
+        var a = Math.atan2(mouse.y - cy, mouse.x - cx);
+        var d = Math.min(Math.hypot(mouse.x-cx, mouse.y-cy) * 0.007, 2.2);
+        dt.style.transform = 'translate('+(Math.cos(a)*d).toFixed(1)+'px, '+(Math.sin(a)*d).toFixed(1)+'px)';
+      });
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // ── Form focus → mascot moods ──
+  var email = document.getElementById('email');
+  var password = document.getElementById('password');
+  function setMood(m){
+    stage.classList.remove('watching','shy');
+    if (m) stage.classList.add(m);
+  }
+  email.addEventListener('focus', function(){ setMood('watching'); });
+  email.addEventListener('blur', function(){ setMood(null); });
+  // Password focus: cover eyes ONLY while the password is hidden.
+  // If it's revealed, relax and look (watching) — nothing to hide.
+  function pwMood(){ setMood(password.type === 'text' ? 'watching' : 'shy'); }
+  password.addEventListener('focus', pwMood);
+  password.addEventListener('blur', function(){ setMood(null); });
+
+  // ── password show/hide ── (keep the input focused so the mascots update live)
+  var eyeBtn = document.getElementById('eyeBtn');
+  eyeBtn.addEventListener('mousedown', function(e){ e.preventDefault(); });
+  eyeBtn.addEventListener('click', function(){
+    password.type = password.type === 'password' ? 'text' : 'password';
+    if (document.activeElement === password) pwMood();
+  });
+
+  // ── login button feedback ──
+  document.getElementById('loginBtn').addEventListener('click', function(){
+    var b = this; b.textContent = 'Logging in…';
+    setTimeout(function(){ b.textContent = 'Logged in!'; }, 800);
+    setTimeout(function(){ b.textContent = 'Log in'; }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

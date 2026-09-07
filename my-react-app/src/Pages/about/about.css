@@ -140,7 +140,7 @@ body, html {
 
 /* ================= Hero Section ================= */
 .about-hero {
-  max-width: 1120px;
+  max-width: var(--container, 1360px);
   margin: 50px auto 80px;
   padding: 0 24px;
   text-align: center;
@@ -279,7 +279,7 @@ body, html {
 
 /* ================= Feature Section ================= */
 .about-feature {
-  max-width: 1040px;
+  max-width: var(--container, 1360px);
   margin: 80px auto 120px;
   padding: 0 24px;
   display: flex;
@@ -369,7 +369,7 @@ body, html {
 .values-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  max-width: 1040px;
+  max-width: var(--container, 1360px);
   margin: 48px auto 0;
   gap: 24px;
 }
@@ -453,7 +453,7 @@ body, html {
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  max-width: 1040px;
+  max-width: var(--container, 1360px);
   margin: 48px auto 0;
   gap: 24px;
   align-items: start;
@@ -577,7 +577,7 @@ body, html {
   display: flex;
   justify-content: center;
   gap: 24px;
-  max-width: 1040px;
+  max-width: var(--container, 1360px);
   margin: 48px auto 64px;
 }
 
@@ -664,7 +664,7 @@ body, html {
 
 /* ================= Community FAQ ================= */
 .faq-section {
-  max-width: 1040px;
+  max-width: var(--container, 1360px);
   margin: 90px auto;
   padding: 0 24px;
   display: flex;
@@ -736,7 +736,7 @@ body, html {
 
 /* ================= Bottom CTA Banner ================= */
 .cta-banner {
-  max-width: 1040px;
+  max-width: var(--container, 1360px);
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 20px;

@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* ============================================================
    HackaMate — global theme ("Build Mode")
    Light UI · Space Grotesk display · Inter body · Space Mono data
@@ -30,7 +32,8 @@
 
   --radius: 14px;
   --radius-sm: 10px;
-  --container: 1120px;
+  --page-padding: clamp(24px, 3.5vw, 56px);
+  --container: 100%;
 }
 
 * { box-sizing: border-box; }
@@ -59,9 +62,10 @@ button { font: inherit; cursor: pointer; }
 
 .container {
   width: 100%;
-  max-width: var(--container);
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--page-padding);
+  box-sizing: border-box;
 }
 
 /* Wordmark — clean bold, two-tone. The "Mate" carries the accent. */
@@ -102,7 +106,7 @@ button { font: inherit; cursor: pointer; }
 
 /* Section headings */
 .section-head {
-  max-width: 640px;
+  max-width: 720px;
   margin: 0 auto 48px;
   text-align: center;
 }

@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'motion/react';
 import './Hero.css';
 
 const avatars = ['#f97316', '#22c55e', '#38bdf8', '#a855f7', '#ec4899'];
@@ -9,33 +10,85 @@ const matches = [
   { title: 'CodeSprint Open', meta: '$5K prizes · 2 days left' },
 ];
 
-function Hero() {
+// The left column reveals its children one after another as the intro lifts.
+const leftContainer = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.09, delayChildren: 0.06 },
+  },
+};
+
+const leftItem = {
+  hidden: { opacity: 0, y: 22 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+// `entered` gates the entrance so it plays in sync with the intro overlay
+// lifting. Defaults to true so the hero is never stuck hidden if mounted alone.
+function Hero({ entered = true }) {
+  const reduce = useReducedMotion();
+
   return (
     <section className="hero" id="top">
       <div className="container hero-inner">
-        <div className="hero-left">
-          <span className="eyebrow">Find · Build · Collaborate · Win</span>
-          <h1 className="hero-title">Your gateway to limitless hackathons.</h1>
-          <p className="hero-text">
+        <motion.div
+          className="hero-left"
+          variants={leftContainer}
+          initial={reduce ? false : 'hidden'}
+          animate={entered ? 'show' : 'hidden'}
+        >
+          <motion.span className="eyebrow" variants={leftItem}>
+            Find · Build · Collaborate · Win
+          </motion.span>
+          <motion.h1 className="hero-title" variants={leftItem}>
+            Your gateway to limitless hackathons.
+          </motion.h1>
+          <motion.p className="hero-text" variants={leftItem}>
             Connect with builders around the world, form a team backed by mentors,
             and ship real projects. One place for everything a hackathon needs.
-          </p>
-          <div className="hero-buttons">
+          </motion.p>
+          <motion.div className="hero-buttons" variants={leftItem}>
             <a href="#hackathons" className="btn btn-primary">Explore hackathons</a>
             <a href="#/signup" className="btn btn-outline">Create account</a>
-          </div>
-          <div className="hero-social">
+          </motion.div>
+          <motion.div className="hero-social" variants={leftItem}>
             <div className="avatars">
               {avatars.map((c) => (
                 <span key={c} className="avatar" style={{ background: c }}></span>
               ))}
             </div>
             <span className="hero-social-text">500+ hackers building right now</span>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="hero-right">
-          <div className="dashboard">
+        <motion.div
+          className="hero-right"
+          initial={reduce ? false : { opacity: 0, x: 40, scale: 0.96 }}
+          animate={
+            entered
+              ? { opacity: 1, x: 0, scale: 1 }
+              : { opacity: 0, x: 40, scale: 0.96 }
+          }
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+        >
+          <motion.div
+            className="dashboard"
+            animate={
+              entered && !reduce
+                ? { y: [0, -6, 0] }
+                : { y: 0 }
+            }
+            transition={{
+              duration: 4.5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: 0.9,
+            }}
+          >
             <div className="dashboard-head">
               <h3>Welcome back, hacker</h3>
               <p>Your personalized hackathon dashboard</p>
@@ -54,8 +107,8 @@ function Hero() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
