@@ -1,11 +1,11 @@
-import React from 'react';
-import './DashboardPage.css';
-import CinematicIntro from './CinematicIntro.jsx';
+﻿import React from "react";
+import "./DashboardPage.css";
+import ShopeersShowcase from "./ShopeersShowcase.jsx";
 
 function DashboardPage() {
   return (
     <div className="db-page">
-      <CinematicIntro />
+      <ShopeersShowcase />
     </div>
   );
 }
