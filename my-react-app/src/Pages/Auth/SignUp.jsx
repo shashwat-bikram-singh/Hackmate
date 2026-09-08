@@ -112,7 +112,6 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [showPw, setShowPw] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   // Validation States
   const [nameTouched, setNameTouched] = useState(false);
@@ -145,14 +144,6 @@ export default function SignUp() {
 
   const hasError = Boolean(nameError || emailError || passwordError || confirmError);
   const formStatus = hasError ? "error" : name && email && password && confirmPw ? "valid" : "neutral";
-
-  function skip() {
-    killTimers();
-    setPhase("interactive");
-    setDropped(true);
-    setAssembled(true);
-    setEyeState("idle");
-  }
 
   useEffect(() => {
     later(() => setDotsClose(true), 1300);
@@ -187,7 +178,6 @@ export default function SignUp() {
       return;
     }
 
-    setSubmitting(true);
     setTimeout(() => {
       window.location.hash = "#/dashboard";
     }, 750);
@@ -195,7 +185,6 @@ export default function SignUp() {
 
   const showLoader = phase === "loader";
   const showCard = phase !== "loader";
-  const isLive = phase === "interactive";
 
   return (
     <div className="anim-root">
@@ -251,16 +240,6 @@ export default function SignUp() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {!isLive && (
-        <button
-          className={`anim-skip ${showLoader ? "" : "dark"}`}
-          onClick={skip}
-          title="Skip intro"
-        >
-          Skip &rarr;
-        </button>
-      )}
 
       {showCard && (
         <motion.div
@@ -468,7 +447,6 @@ export default function SignUp() {
                     className="anim-btn-secondary"
                     type="button"
                     onClick={() => {
-                      setSubmitting(true);
                       setTimeout(() => {
                         window.location.hash = "#/dashboard";
                       }, 500);

@@ -26,6 +26,7 @@ function DashboardCanvas({
 }) {
   const [activeNav, setActiveNav] = useState('Dashboard');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Editable Dashboard Title
   const [dashboardTitle, setDashboardTitle] = useState('HackaMate Team Matching Dashboard');
@@ -33,7 +34,7 @@ function DashboardCanvas({
   const [tempTitle, setTempTitle] = useState(dashboardTitle);
 
   // Active Widgets added from Add Widget drawer
-  const [activeWidgets, setActiveWidgets] = useState(['radar', 'checklist']);
+  const [activeWidgets, setActiveWidgets] = useState(['radar', 'checklist', 'calendar']);
 
   const handleToggleWidget = (widgetId) => {
     setActiveWidgets(prev => 
@@ -59,8 +60,10 @@ function DashboardCanvas({
     <div className={`db-canvas ${interactive ? 'db-canvas--interactive' : ''}`}>
       <Sidebar
         activeItem={activeNav}
-        onNavClick={interactive ? setActiveNav : undefined}
+        onNavClick={interactive ? (key) => { setActiveNav(key); setSidebarOpen(false); } : undefined}
         interactive={interactive}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
       <div className="db-main">
@@ -70,6 +73,7 @@ function DashboardCanvas({
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onReplayIntro={onReplayIntro}
+          onToggleSidebar={() => setSidebarOpen(prev => !prev)}
         />
 
         <div className="db-content">

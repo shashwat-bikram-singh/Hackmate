@@ -802,3 +802,22 @@ body, html {
     padding: 16px 24px;
   }
 }
+
+@media (max-width: 540px) {
+  .cta-banner {
+    padding: 32px 20px;
+    margin: 40px auto 60px;
+    border-radius: 16px;
+  }
+  .cta-mosaic-grid {
+    grid-template-columns: repeat(4, 38px);
+    gap: 8px;
+  }
+  .mosaic-cell {
+    width: 38px;
+    height: 38px;
+  }
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
+
 export default function ActiveWidgets({ activeWidgets, onRemoveWidget }) {
   // Submission Tracker local state
   const [checklist, setChecklist] = useState([

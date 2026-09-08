@@ -6,35 +6,38 @@ export default function MatchSuccessGauge({ animate, interactive = false }) {
   const circumference = 2 * Math.PI * radius;
   const filledPortion = circumference * (targetPercent / 100);
   
-  const [currentPercent, setCurrentPercent] = useState(0);
-  const [currentOffset, setCurrentOffset] = useState(circumference);
+  const [currentPercent, setCurrentPercent] = useState(() => (animate ? 0 : targetPercent));
+  const [currentOffset, setCurrentOffset] = useState(() => (animate ? circumference : circumference - filledPortion));
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   useEffect(() => {
-    if (animate) {
-      let start = null;
-      const duration = 1200;
-      
-      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-      
-      const animateFrame = (timestamp) => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const easedProgress = easeOutCubic(progress);
-        
-        setCurrentPercent(Math.round(easedProgress * targetPercent));
-        setCurrentOffset(circumference - (easedProgress * filledPortion));
-        
-        if (progress < 1) {
-          requestAnimationFrame(animateFrame);
-        }
-      };
-      
-      requestAnimationFrame(animateFrame);
-    } else {
-      setCurrentPercent(targetPercent);
-      setCurrentOffset(circumference - filledPortion);
+    if (!animate) {
+      const id = requestAnimationFrame(() => {
+        setCurrentPercent(targetPercent);
+        setCurrentOffset(circumference - filledPortion);
+      });
+      return () => cancelAnimationFrame(id);
     }
+
+    let start = null;
+    const duration = 1200;
+    
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    
+    const animateFrame = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+      
+      setCurrentPercent(Math.round(easedProgress * targetPercent));
+      setCurrentOffset(circumference - (easedProgress * filledPortion));
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateFrame);
+      }
+    };
+    
+    requestAnimationFrame(animateFrame);
   }, [animate, circumference, filledPortion, targetPercent]);
 
   return (

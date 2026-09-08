@@ -110,15 +110,32 @@ const bottomNavItems = [
  * Sidebar — HackaMate dashboard navigation
  * @param {{ activeItem?: string, onNavClick?: (key: string) => void, interactive?: boolean }} props
  */
-export default function Sidebar({ activeItem = 'Dashboard', onNavClick, interactive = false }) {
+export default function Sidebar({
+  activeItem = 'Dashboard',
+  onNavClick,
+  interactive = false,
+  isOpen = false,
+  onClose,
+}) {
   const handleClick = (key) => {
     if (interactive && onNavClick) {
       onNavClick(key);
     }
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
-    <aside className="db-sidebar">
+    <>
+      {isOpen && (
+        <div
+          className="db-sidebar-backdrop"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+      <aside className={`db-sidebar ${isOpen ? 'is-open' : ''}`}>
       <a href="#/" className="db-sidebar-header" title="Back to HackaMate Landing Page">
         <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
           <path d="M24 2L44 14V34L24 46L4 34V14L24 2Z" fill="#2563eb" />
@@ -158,19 +175,7 @@ export default function Sidebar({ activeItem = 'Dashboard', onNavClick, interact
           </a>
         ))}
       </nav>
-
-      <div className="db-sidebar-upgrade">
-        <div className="db-sidebar-upgrade-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
-            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
-            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
-          </svg>
-        </div>
-        <h4 className="db-sidebar-upgrade-title">Go Premium!</h4>
-        <p className="db-sidebar-upgrade-text">Unlock unlimited team matching and priority visibility.</p>
-        <button className="db-sidebar-upgrade-btn">Upgrade now</button>
-      </div>
     </aside>
+    </>
   );
 }

@@ -109,7 +109,10 @@ export default function MascotScene({
   const isWatching =
     eyeState === "watching" || (eyeState === "shy" && peek);
   const isError = formStatus === "error";
-  isShyRef.current = isShy;
+
+  useEffect(() => {
+    isShyRef.current = isShy;
+  }, [isShy]);
 
   const stageClass = `mascot-stage${isShy ? " shy" : ""}${
     isWatching ? " watching" : ""

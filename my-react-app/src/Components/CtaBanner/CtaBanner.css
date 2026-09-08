@@ -22,3 +22,9 @@
 }
 .cta-btn { margin-top: 28px; background: #fff; color: var(--panel); }
 .cta-btn:hover { background: var(--violet-soft); }
+
+@media (max-width: 600px) {
+  .cta { padding: 48px 0; }
+  .cta-inner { padding: 40px 20px; border-radius: 18px; }
+  .cta-title { font-size: 1.8rem; }
+}

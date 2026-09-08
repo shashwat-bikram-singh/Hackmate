@@ -349,12 +349,40 @@
   margin-left: auto;
 }
 
+.db-topnav-calendar-anchor {
+  position: relative;
+}
+
+.db-topnav-date-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 2px 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.db-topnav-date-btn:hover {
+  background: #f8f9fb;
+  border-color: #e6e8ee;
+}
+
+.db-topnav-date-btn--active {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
 .db-topnav-date {
   font-size: 0.82rem;
   color: #5c6472;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-weight: 500;
 }
 
 .db-topnav-period {
@@ -363,7 +391,182 @@
   background: #f5f6fa;
   padding: 6px 12px;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  border: 1px solid #eef0f5;
+  transition: all 0.15s ease;
+}
+
+.db-topnav-date-btn:hover .db-topnav-period,
+.db-topnav-date-btn--active .db-topnav-period {
+  background: #ffffff;
+  border-color: #dbeafe;
+  color: #2563eb;
+}
+
+.db-topnav-arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+/* Full Screen Calendar Modal Backdrop */
+.db-calendar-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 99999;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.db-calendar-modal-container {
+  width: 100%;
+  height: auto;
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.db-cal-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.db-cal-dropdown-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.db-cal-dropdown-title-group h5 {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #14161d;
+}
+
+.db-cal-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.db-cal-close-btn {
+  background: #f8f9fb;
+  border: 1px solid #e6e8ee;
+  color: #8a91a1;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s ease;
+}
+
+.db-cal-close-btn:hover {
+  background: #fef2f2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+.db-cal-presets-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  padding-bottom: 2px;
+}
+
+.db-cal-preset-pill {
+  font-size: 0.74rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: #f5f6fa;
+  border: 1px solid #e6e8ee;
+  color: #5c6472;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.db-cal-preset-pill:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+.db-cal-preset-pill--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.db-cal-preset-pill--active:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.db-cal-embedded-wrap {
+  width: 100%;
+}
+
+.db-cal-dropdown-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.db-cal-footer-hint {
+  font-size: 0.72rem;
+  color: #8a91a1;
+}
+
+.db-cal-apply-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.db-cal-apply-btn:hover {
+  background: #1d4ed8;
 }
 
 .db-topnav-add {
@@ -1267,6 +1470,23 @@
 }
 
 /* Hackathon Calendar Widget */
+.db-calendar-box {
+  overflow: visible;
+}
+
+.db-calendar-widget-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.db-calendar-widget-wrapper .cal-widget {
+  width: 100%;
+  max-width: 100%;
+}
+
 .db-calendar-events {
   display: flex;
   flex-direction: column;
@@ -1868,75 +2088,25 @@
 
 .db-notif-dropdown {
   position: absolute;
-  top: 42px;
-  right: 0;
-  width: 280px;
-  background: #ffffff;
-  border: 1px solid #e6e8ee;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  top: calc(100% + 8px);
+  right: -4px;
+  width: 380px;
+  max-width: calc(100vw - 24px);
   z-index: 120;
-  overflow: hidden;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  box-shadow: none;
+  overflow: visible;
+  transform-origin: top right;
+  will-change: transform, opacity;
 }
 
-.db-notif-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.db-notif-head h5 {
-  margin: 0;
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.db-notif-badge {
-  font-size: 0.7rem;
-  background: #eff6ff;
-  color: var(--violet);
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.db-notif-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.db-notif-item {
-  padding: 10px 16px;
-  border-bottom: 1px solid #f8f9fb;
-  transition: background 0.15s;
-}
-
-.db-notif-item:hover {
-  background: #f8f9fb;
-}
-
-.db-notif-item--unread {
-  background: #f0fdf4;
-}
-
-.db-notif-item-title {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #14161d;
-}
-
-.db-notif-item-text {
-  font-size: 0.74rem;
-  color: #5c6472;
-  margin-top: 2px;
-}
-
-.db-notif-item-time {
-  font-size: 0.68rem;
-  color: #94a3b8;
-  margin-top: 4px;
+@media (max-width: 640px) {
+  .db-notif-dropdown {
+    right: -50px;
+    width: 330px;
+  }
 }
 
 .db-toast {
@@ -2072,5 +2242,142 @@
 .cinema-mode-badge:hover:not(.active) {
   background: #f1f5f9;
   color: #14161d;
+}
+
+/* ─── Mobile Sidebar Toggle, Backdrop & Responsive Layouts ─── */
+.db-mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #14161d;
+  flex-shrink: 0;
+}
+
+.db-mobile-menu-btn:hover {
+  background: #f1f5f9;
+}
+
+.db-sidebar-backdrop {
+  display: none;
+}
+
+.db-table-responsive-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1024px) {
+  .db-grid-2,
+  .db-grid-3 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .db-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .db-mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .db-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 99;
+  }
+
+  .db-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    height: 100dvh;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .db-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .db-topnav {
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .db-topnav-date,
+  .db-topnav-search-shortcut {
+    display: none;
+  }
+
+  .db-topnav-period {
+    padding: 5px 9px;
+    font-size: 0.76rem;
+  }
+
+  .db-content {
+    padding: 16px 14px 60px;
+  }
+}
+
+@media (max-width: 580px) {
+  .db-active-widgets-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .db-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .db-topnav-search {
+    min-width: 0;
+    flex: 1;
+    padding: 6px 10px;
+  }
+
+  .db-topnav-search-input {
+    font-size: 0.8rem;
+  }
+
+  .db-topnav-add,
+  .db-topnav-export,
+  .db-topnav-replay {
+    padding: 6px 10px;
+    font-size: 0.76rem;
+  }
+
+  .db-page-title {
+    font-size: 1.25rem;
+    margin-bottom: 14px;
+  }
+
+  .db-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .db-table th,
+  .db-table td {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
 }
 

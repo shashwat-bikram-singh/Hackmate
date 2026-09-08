@@ -272,4 +272,34 @@
     flex-direction: column;
     gap: 0;
   }
+}
+
+@media (max-width: 520px) {
+  .contact-container,
+  .contact-page-wrapper {
+    padding: 20px 12px 48px;
+  }
+
+  .contact-card {
+    border-radius: 18px;
+    padding: 14px;
+    gap: 24px;
+  }
+
+  .contact-sidebar,
+  .contact-info-panel {
+    min-height: 380px;
+    padding: 24px 18px;
+    border-radius: 14px;
+  }
+
+  .sidebar-header h2,
+  .panel-header h2 {
+    font-size: 1.45rem;
+  }
+
+  .button-container button,
+  .form-action button {
+    width: 100%;
+  }
 }

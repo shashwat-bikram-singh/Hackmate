@@ -1,10 +1,11 @@
-﻿/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    HackaMate Animated Login — SignIn.css
    ═══════════════════════════════════════════════ */
 
 .anim-root {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -354,5 +355,24 @@
   .anim-right {
     width: 100%;
     padding: 36px 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .anim-root {
+    padding: 16px 12px;
+  }
+  .anim-card {
+    border-radius: 20px;
+  }
+  .anim-left {
+    height: 180px;
+    min-height: 180px;
+  }
+  .anim-right {
+    padding: 24px 18px;
+  }
+  .anim-heading {
+    font-size: 1.5rem;
   }
 }

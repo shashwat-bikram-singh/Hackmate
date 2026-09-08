@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, LayoutGroup, useReducedMotion } from 'motion/react';
+import { motion, LayoutGroup, AnimatePresence, useReducedMotion } from 'motion/react';
 import './Navbar.css';
 
 const navTabs = [
@@ -23,6 +23,7 @@ function getActiveTabFromHash(hash) {
 // landing page passes the flag it toggles as the intro overlay lifts.
 function Navbar({ entered = true }) {
   const reduce = useReducedMotion();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [active, setActive] = useState(() => {
     return typeof window !== 'undefined'
@@ -33,6 +34,7 @@ function Navbar({ entered = true }) {
   useEffect(() => {
     const syncActiveTab = () => {
       setActive(getActiveTabFromHash(window.location.hash));
+      setMobileMenuOpen(false);
     };
 
     syncActiveTab();
@@ -58,7 +60,7 @@ function Navbar({ entered = true }) {
           Hacka<span className="logo-accent">Mate</span>
         </a>
 
-        {/* Animated Continuous Tabs Navigation */}
+        {/* Animated Continuous Tabs Navigation (Desktop) */}
         <LayoutGroup id="navbar-nav-group">
           <nav className="navbar-tabs-nav" aria-label="Main Navigation">
             {navTabs.map((tab) => {
@@ -101,8 +103,79 @@ function Navbar({ entered = true }) {
         <div className="navbar-actions">
           <a href="#/login" className="navbar-login">Log in</a>
           <a href="#/signup" className="btn btn-primary navbar-cta">Get started</a>
+
+          {/* Mobile Hamburger Toggle Button */}
+          <button
+            className={`navbar-mobile-toggle ${mobileMenuOpen ? 'is-open' : ''}`}
+            type="button"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className="navbar-toggle-bar" />
+            <span className="navbar-toggle-bar" />
+            <span className="navbar-toggle-bar" />
+          </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div
+              className="navbar-mobile-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div
+              className="navbar-mobile-sheet"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <nav className="navbar-mobile-links" aria-label="Mobile Navigation">
+                {navTabs.map((tab) => {
+                  const isActive = active === tab.id;
+                  return (
+                    <a
+                      key={tab.id}
+                      href={tab.href}
+                      onClick={() => {
+                        handleTabClick(tab);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`navbar-mobile-link ${isActive ? 'is-active' : ''}`}
+                    >
+                      {tab.label}
+                    </a>
+                  );
+                })}
+              </nav>
+
+              <div className="navbar-mobile-actions">
+                <a
+                  href="#/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="navbar-mobile-btn navbar-mobile-btn-outline"
+                >
+                  Log in
+                </a>
+                <a
+                  href="#/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="navbar-mobile-btn navbar-mobile-btn-primary"
+                >
+                  Get started
+                </a>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

@@ -112,7 +112,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
 
   // Validation States
   const [emailTouched, setEmailTouched] = useState(false);
@@ -135,15 +134,6 @@ export default function SignIn() {
 
   const hasError = Boolean(emailError || passwordError);
   const formStatus = hasError ? "error" : email && password ? "valid" : "neutral";
-
-  // Skip animation directly to interactive
-  function skip() {
-    killTimers();
-    setPhase("interactive");
-    setDropped(true);
-    setAssembled(true);
-    setEyeState("idle");
-  }
 
   // Animation timeline sequence
   useEffect(() => {
@@ -175,7 +165,6 @@ export default function SignIn() {
       return;
     }
 
-    setSubmitting(true);
     setTimeout(() => {
       window.location.hash = "#/dashboard";
     }, 750);
@@ -183,7 +172,6 @@ export default function SignIn() {
 
   const showLoader = phase === "loader";
   const showCard = phase !== "loader";
-  const isLive = phase === "interactive";
 
   return (
     <div className="anim-root">
@@ -239,17 +227,6 @@ export default function SignIn() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Skip button during intro sequence */}
-      {!isLive && (
-        <button
-          className={`anim-skip ${showLoader ? "" : "dark"}`}
-          onClick={skip}
-          title="Skip intro"
-        >
-          Skip &rarr;
-        </button>
-      )}
 
       {/* Phase 2+: Split-Screen Login Card */}
       {showCard && (
@@ -401,7 +378,6 @@ export default function SignIn() {
                     className="anim-btn-secondary"
                     type="button"
                     onClick={() => {
-                      setSubmitting(true);
                       setTimeout(() => {
                         window.location.hash = "#/dashboard";
                       }, 500);

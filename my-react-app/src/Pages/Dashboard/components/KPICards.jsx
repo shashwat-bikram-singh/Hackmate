@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 function useCounter(target, animate, duration = 1500) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(() => (animate ? 0 : target));
 
   useEffect(() => {
     if (!animate) {
-      setCount(target);
-      return;
+      const id = window.requestAnimationFrame(() => setCount(target));
+      return () => window.cancelAnimationFrame(id);
     }
     
     let startTimestamp = null;

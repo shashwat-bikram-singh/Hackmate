@@ -2,14 +2,28 @@ import React from 'react';
 import './Footer.css';
 import Reveal from '../Reveal/Reveal.jsx';
 
-const productLinks = ['Hackathons', 'Team finder', 'Events', 'Contacts', 'Resources'];
-const resourceLinks = ['Learning hub', 'Community', 'Blog', 'Support'];
-const companyLinksHalf1 = ['About', 'Privacy', 'Terms', 'Home'];
-const companyLinksHalf2 = ['Contact', 'Events', 'Community', 'About'];
+const productLinks = ['Hackathons', 'Team finder', 'Resources', 'Events'];
+const resourceLinks = ['Learning hub', 'Blog', 'Support', 'Community'];
+const companyLinks = ['Privacy', 'Terms', 'Home', 'About'];
+
+const linkMap = {
+  Hackathons: '#hackathons',
+  'Team finder': '#teams',
+  Resources: '#features',
+  Events: '#hackathons',
+  'Learning hub': '#features',
+  Blog: '#/',
+  Support: '#/contact',
+  Community: '#features',
+  Privacy: '#/',
+  Terms: '#/',
+  Home: '#/',
+  About: '#/about',
+};
 
 function Footer() {
   return (
-    <footer className="footer" id="about">
+    <footer className="footer" id="footer">
       <Reveal className="container footer-inner">
         <div className="footer-brand">
           <span className="logo footer-logo">
@@ -65,7 +79,7 @@ function Footer() {
           <div className="footer-col">
             <span className="footer-col-title">Product</span>
             {productLinks.map((l) => (
-              <a href="#/" key={l}>{l}</a>
+              <a href={linkMap[l] || '#/'} key={l}>{l}</a>
             ))}
           </div>
 
@@ -73,23 +87,15 @@ function Footer() {
           <div className="footer-col">
             <span className="footer-col-title">Resources</span>
             {resourceLinks.map((l) => (
-              <a href="#/" key={l}>{l}</a>
+              <a href={linkMap[l] || '#/'} key={l}>{l}</a>
             ))}
           </div>
 
-          {/* Company Column - First Half */}
+          {/* Company Column */}
           <div className="footer-col">
             <span className="footer-col-title">Company</span>
-            {companyLinksHalf1.map((l, i) => (
-              <a href="#/" key={l + i}>{l}</a>
-            ))}
-          </div>
-
-          {/* Company Column - Second Half */}
-          <div className="footer-col">
-            <span className="footer-col-title">Company</span>
-            {companyLinksHalf2.map((l, i) => (
-              <a href="#/" key={l + i}>{l}</a>
+            {companyLinks.map((l, i) => (
+              <a href={linkMap[l] || '#/'} key={l + i}>{l}</a>
             ))}
           </div>
         </div>

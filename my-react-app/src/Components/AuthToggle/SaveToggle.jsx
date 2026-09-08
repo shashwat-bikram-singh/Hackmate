@@ -67,7 +67,7 @@ export const SaveToggle = ({
     onStatusChange?.(status);
   }, [status, onStatusChange]);
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     if (disabled) return;
 
     if (status === 'idle') {
